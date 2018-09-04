@@ -1,21 +1,38 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react'
+import './App.css'
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </div>
-    );
+let map;
+
+window.initMap = function() {
+   console.log('loaded')
+    map = new window.google.maps.Map(document.getElementById('map'), {
+      center: {lat: 40.2244, lng: -105.2689},
+      zoom: 16
+    })
   }
+
+export default class App extends Component {
+  constructor(props) {
+      super(props);
+      this.state = {
+        map: {}
+      }
+  }
+
+componentDidMount () {
+   const script = document.createElement('script')
+   script.async = true
+   script.defer = true
+   script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyAWiSZ2beXFrSFWzZVRgF122wCkVf4P67Y&v=3.32&callback=initMap"
+   document.head.appendChild(script)
+
 }
 
-export default App;
+  render() {
+    return (
+      <div>{this.map}
+      <div style={{ width: 500, height: 500}} id="map" />
+      </div>
+    )
+  }
+}
