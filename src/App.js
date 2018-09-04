@@ -30,7 +30,13 @@ window.initMap = function() {
     let marker4 = new window.google.maps.Marker({
       position: wateringhole,
       map: map,
-      title: 'The Quarry Self-Serve Watering Hole '
+      title: 'The Quarry Self-Serve Watering Hole'
+    })
+    let oskarblues = {lat: 40.224421, lng: -105.268529};
+    let marker5 = new window.google.maps.Marker({
+      position: oskarblues,
+      map: map,
+      title: 'Oskar Blues Grill & Brew'
     })
   }
 
