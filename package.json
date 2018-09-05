@@ -2,10 +2,11 @@
   "name": "project_6_react_neighborhood_map",
   "version": "0.1.0",
   "private": true,
-  "homepage" : "https://github.com/3noki/project_6_react_neighborhood_map",
+  "homepage": "https://github.com/3noki/project_6_react_neighborhood_map",
   "dependencies": {
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
+    "react-google-maps": "^9.4.5",
     "react-scripts": "1.1.5"
   },
   "scripts": {

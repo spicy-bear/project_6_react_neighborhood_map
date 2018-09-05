@@ -1,5 +1,7 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+
 html, body {
-  font-family: Arial, sans-serif;
+  font-family: 'Roboto', sans-serif;
   height: 100%;
   width: 100%;
   margin: 0;
@@ -11,6 +13,69 @@ html, body {
   height: 100%;
   position: absolute;
 }
+.container {
+   height: 100%;
+   position: relative;
+}
+#hide-listings, #show-listings {
+  width: 48%;
+}
+.options-box {
+   background: #fff;
+   border: 1px solid #999;
+   border-radius: 2px;
+   height: 100%;
+   line-height: 10px;
+   padding: 10px 10px 10px 10px;
+   text-align: left;
+   width: 100%;
+   position: relative;
+}
+
+.btn {
+  margin: 0 0 0 0;
+  display: inline-block;
+	background-color: #fafafa;
+	color: #111;
+	border: 0px solid #f1f1f1;
+	border-radius: 1px;
+	cursor: default;
+	font-size: 11px;
+	text-align: center;
+	height: 30px;
+	line-height: 30px;
+	min-width: 50px;
+  max-width: 100px;
+	padding: 0 0px;
+	text-decoration: none;
+  direction: ltr;
+  overflow: hidden;
+  position: relative;
+  user-select: none;
+  /* border-bottom-left-radius: 2px;
+  border-top-left-radius: 2px; */
+  background-clip: padding-box;
+  box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px;
+  font-weight: 500;
+  }
+
+.btn:focus {
+  outline: 0;
+  background: #f1f1f1;
+}
+
+.btn:active {
+  outline: 0;
+  background: #f1f1f1;
+}
+
+.btn:hover {
+	background-color: #f1f1f1;
+	-webkit-box-shadow: 0px 1px 1px rgba(0,0,0,.1);
+	-moz-box-shadow: 0px 1px 1px rgba(0,0,0,.1);
+	box-shadow: 0px 1px 1px rgba(0,0,0,.1);
+}
+
 
 /*default create-react-app css*/
 .App {
