@@ -141,41 +141,36 @@ let styledMapType = new window.google.maps.StyledMapType(
 ],
     {name: 'Styled Map'}
 )
-    map = new window.google.maps.Map(document.getElementById('map'), {
-      center: {lat: 40.2244, lng: -105.2689},
-      zoom: 16,
-      styles: styledMapType,
-      mapTypeControlOptions: { mapTypeIds: ['roadmap', 'satellite', 'hybrid', 'terrain', 'styled_map'] }
-    })
+  map = new window.google.maps.Map(document.getElementById('map'), {
+    center: {lat: 40.2244, lng: -105.2689},
+    zoom: 16,
+    styles: styledMapType,
+    mapTypeControlOptions: { mapTypeIds: ['roadmap', 'satellite', 'hybrid', 'terrain', 'styled_map'] }
+  })
 
-    let locations = [
-      {title: 'Lyons Classic Pinball', location: {lat: 40.224428, lng: -105.268916}},
-      {title: 'Planet Bluegrass', location: {lat: 40.2269, lng: -105.2733}},
-      {title: 'The Stone Cup', location: {lat: 40.2245, lng: -105.2706}},
-      {title: 'The Quarry Self-Serve Watering Hole', location: {lat: 40.2227, lng: -105.2650}},
-      {title: 'Oskar Blues Grill & Brew', location: {lat: 40.224421, lng: -105.268529}}
-    ]
+  let locations = [
+    {title: 'Lyons Classic Pinball', location: {lat: 40.224428, lng: -105.268916}},
+    {title: 'Planet Bluegrass', location: {lat: 40.2269, lng: -105.2733}},
+    {title: 'The Stone Cup', location: {lat: 40.2245, lng: -105.2706}},
+    {title: 'The Quarry Self-Serve Watering Hole', location: {lat: 40.2227, lng: -105.2650}},
+    {title: 'Oskar Blues Grill & Brew', location: {lat: 40.224421, lng: -105.268529}}
+  ]
 
-    let largeInfowindow = new window.google.maps.InfoWindow();
-    let icon = {
-      anchor: new window.google.maps.Point(172.268, 501.67),
-      // url: 'https://www.shareicon.net/data/128x128/2015/09/27/108149_map_512x512.png',
-      // scaledSize: new window.google.maps.Size(30, 30)
-      path: 'M 172.268,501.67 C 26.97,291.031 0,269.413 0,192 0,85.961 85.961,0 192,0 c 106.039,0 192,85.961 192,192 0,77.413 -26.97,99.031 -172.268,309.67 -9.535,13.774 -29.93,13.773 -39.464,0 z',
-        fillColor: '#000000',
-        fillOpacity: 1,
-        strokeColor: '#000',
-        strokeWeight: 2,
-        scale: .06
-}
-
-    // Style the markers a bit. This will be our listing marker icon.
-    let defaultIcon = icon;
+  let largeInfowindow = new window.google.maps.InfoWindow();
+// Style the markers a bit. This will be our listing marker icon.
+  let defaultIcon = {
+    anchor: new window.google.maps.Point(172.268, 501.67),
+    path: 'M 172.268,501.67 C 26.97,291.031 0,269.413 0,192 0,85.961 85.961,0 192,0 c 106.039,0 192,85.961 192,192 0,77.413 -26.97,99.031 -172.268,309.67 -9.535,13.774 -29.93,13.773 -39.464,0 z',
+      fillColor: '#000000',
+      fillOpacity: 1,
+      strokeColor: '#000',
+      strokeWeight: 2,
+      scale: .06
+  }
     // Create a "highlighted location" marker color for when the user
     // mouses over the marker.
     let highlightedIcon =  {
       anchor: new window.google.maps.Point(172.268,501.67),
-
       path: 'M 172.268,501.67 C 26.97,291.031 0,269.413 0,192 0,85.961 85.961,0 192,0 c 106.039,0 192,85.961 192,192 0,77.413 -26.97,99.031 -172.268,309.67 -9.535,13.774 -29.93,13.773 -39.464,0 z',
         fillColor: '#ffffff',
         fillOpacity: 1,
@@ -183,7 +178,6 @@ let styledMapType = new window.google.maps.StyledMapType(
         strokeWeight: 2,
         scale: .06
     }
-
     // The following group uses the location array to create an array of markers on initialize.
     for (let i = 0; i < locations.length; i++) {
       // Get the position from the location array.
@@ -196,7 +190,7 @@ let styledMapType = new window.google.maps.StyledMapType(
         draggable: false,
         animation: window.google.maps.Animation.DROP,
         id: i,
-        icon: icon
+        icon: defaultIcon
       })
       map.mapTypes.set('styled_map', styledMapType);
       map.setMapTypeId('styled_map');
@@ -210,14 +204,14 @@ let styledMapType = new window.google.maps.StyledMapType(
       // to change the colors back and forth.
       marker.addListener('mouseover', function() {
         this.setIcon(highlightedIcon);
-      });
+      })
       marker.addListener('mouseout', function() {
         this.setIcon(defaultIcon);
-      });
+      })
     }
     showListings()
-    document.getElementById('hide-listings').addEventListener('click', hideListings);
-    document.getElementById('show-listings').addEventListener('click', showListings);
+    document.getElementById('hide-listings').addEventListener('click', hideListings)
+    document.getElementById('show-listings').addEventListener('click', showListings)
 
   }
 
@@ -227,13 +221,43 @@ let styledMapType = new window.google.maps.StyledMapType(
   function populateInfoWindow(marker, infowindow) {
     // Check to make sure the infowindow is not already opened on this marker.
     if (infowindow.marker !== marker) {
-      infowindow.marker = marker;
+      infowindow.marker = marker
       infowindow.setContent('<div>' + marker.title + '</div>');
-      infowindow.open(map, marker);
+      infowindow.open(map, marker)
       // Make sure the marker property is cleared if the infowindow is closed.
       infowindow.addListener('closeclick',function(){
-        infowindow.setMarker = null;
-      });
+        infowindow.setMarker = null
+      })
+    let streetViewService = new window.google.maps.StreetViewService();
+    let radius = 50;
+    // In case the status is OK, which means the pano was found, compute the
+    // position of the streetview image, then calculate the heading, then get a
+    // panorama from that and set the options
+    function getStreetView(data, status) {
+      if (status == window.google.maps.StreetViewStatus.OK) {
+        let nearStreetViewLocation = data.location.latLng;
+        let heading = window.google.maps.geometry.spherical.computeHeading(
+          nearStreetViewLocation, marker.position);
+          infowindow.setContent('<div>' + marker.title + '</div><div id="pano"></div>');
+          let panoramaOptions = {
+            position: nearStreetViewLocation,
+            pov: {
+              heading: heading,
+              pitch: 30
+            }
+          };
+        let panorama = new window.google.maps.StreetViewPanorama(
+          document.getElementById('pano'), panoramaOptions);
+      } else {
+        infowindow.setContent('<div>' + marker.title + '</div>' +
+          '<div>No Street View Found</div>');
+      }
+      }
+      // Use streetview service to get the closest streetview image within
+      // 50 meters of the markers position
+      streetViewService.getPanoramaByLocation(marker.position, radius, getStreetView);
+      // Open the infowindow on the correct marker.
+      infowindow.open(map, marker);
     }
   }
 
