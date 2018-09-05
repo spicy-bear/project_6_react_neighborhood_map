@@ -11,235 +11,131 @@ let styledMapType = new window.google.maps.StyledMapType(
     {
         "featureType": "all",
         "elementType": "labels",
-        "stylers": [
-            {
-                "visibility": "off"
-            }
-        ]
+        "stylers": [{"visibility": "off"}]
     },
     {
         "featureType": "administrative",
         "elementType": "all",
-        "stylers": [
-            {
-                "visibility": "off"
-            }
-        ]
+        "stylers": [{"visibility": "off"}]
     },
     {
         "featureType": "administrative",
         "elementType": "labels.text",
-        "stylers": [
-            {
-                "visibility": "off"
-            }
-        ]
+        "stylers": [{"visibility": "off"}]
     },
     {
         "featureType": "landscape",
         "elementType": "all",
         "stylers": [
-            {
-                "visibility": "simplified"
-            },
-            {
-                "hue": "#0066ff"
-            },
-            {
-                "saturation": 74
-            },
-            {
-                "lightness": 100
-            }
+            {"visibility": "simplified"},
+            {"hue": "#0066ff"},
+            {"saturation": 74},
+            {"lightness": 100}
         ]
     },
     {
         "featureType": "landscape",
         "elementType": "labels.text",
-        "stylers": [
-            {
-                "visibility": "off"
-            }
-        ]
+        "stylers": [{"visibility": "off"}]
     },
     {
         "featureType": "poi",
         "elementType": "all",
-        "stylers": [
-            {
-                "visibility": "simplified"
-            }
-        ]
+        "stylers": [{"visibility": "simplified"}]
     },
     {
         "featureType": "poi",
         "elementType": "labels.text",
-        "stylers": [
-            {
-                "visibility": "off"
-            }
-        ]
+        "stylers": [{"visibility": "off"}]
     },
     {
         "featureType": "poi.attraction",
         "elementType": "all",
-        "stylers": [
-            {
-                "visibility": "off"
-            }
-        ]
+        "stylers": [{"visibility": "off"}]
     },
     {
         "featureType": "poi.business",
         "elementType": "all",
-        "stylers": [
-            {
-                "visibility": "simplified"
-            }
-        ]
+        "stylers": [{"visibility": "simplified"}]
     },
     {
         "featureType": "poi.business",
         "elementType": "labels",
-        "stylers": [
-            {
-                "visibility": "off"
-            }
-        ]
+        "stylers": [{"visibility": "off"}]
     },
     {
         "featureType": "road",
         "elementType": "all",
-        "stylers": [
-            {
-                "visibility": "off"
-            }
-        ]
+        "stylers": [{"visibility": "off"}]
     },
     {
         "featureType": "road",
         "elementType": "labels.text",
-        "stylers": [
-            {
-                "visibility": "off"
-            }
-        ]
+        "stylers": [{"visibility": "off"}]
     },
     {
         "featureType": "road.highway",
         "elementType": "all",
         "stylers": [
-            {
-                "visibility": "simplified"
-            },
-            {
-                "weight": 0.6
-            },
-            {
-                "saturation": -85
-            },
-            {
-                "lightness": 61
-            }
+            {"visibility": "simplified"},
+            {"weight": 0.6},
+            {"saturation": -85},
+            {"lightness": 61}
         ]
     },
     {
         "featureType": "road.highway",
         "elementType": "geometry",
-        "stylers": [
-            {
-                "visibility": "on"
-            }
-        ]
+        "stylers": [{"visibility": "on"}]
     },
     {
         "featureType": "road.highway",
         "elementType": "labels",
-        "stylers": [
-            {
-                "visibility": "off"
-            }
-        ]
+        "stylers": [{"visibility": "off"}]
     },
     {
         "featureType": "road.highway",
         "elementType": "labels.text",
-        "stylers": [
-            {
-                "visibility": "off"
-            }
-        ]
+        "stylers": [{"visibility": "off"}]
     },
     {
         "featureType": "road.arterial",
         "elementType": "all",
-        "stylers": [
-            {
-                "visibility": "off"
-            }
-        ]
+        "stylers": [{"visibility": "off"}]
     },
     {
         "featureType": "road.arterial",
         "elementType": "labels",
-        "stylers": [
-            {
-                "visibility": "off"
-            }
-        ]
+        "stylers": [{"visibility": "off"}]
     },
     {
         "featureType": "road.local",
         "elementType": "all",
-        "stylers": [
-            {
-                "visibility": "on"
-            }
-        ]
+        "stylers": [{"visibility": "on"}]
     },
     {
         "featureType": "road.local",
         "elementType": "labels",
-        "stylers": [
-            {
-                "visibility": "off"
-            }
-        ]
+        "stylers": [{"visibility": "off"}]
     },
     {
         "featureType": "transit",
         "elementType": "all",
-        "stylers": [
-            {
-                "visibility": "simplified"
-            }
-        ]
+        "stylers": [{"visibility": "simplified"}]
     },
     {
         "featureType": "transit",
         "elementType": "labels",
-        "stylers": [
-            {
-                "visibility": "off"
-            }
-        ]
+        "stylers": [{"visibility": "off"}]
     },
     {
         "featureType": "water",
         "elementType": "all",
         "stylers": [
-            {
-                "visibility": "simplified"
-            },
-            {
-                "color": "#5f94ff"
-            },
-            {
-                "lightness": 26
-            },
-            {
-                "gamma": 5.86
-            }
+            {"visibility": "on"},
+            {"color": "#5f94ff"},
+            {"lightness": 26},
+            {"gamma": 5.86}
         ]
     }
 ],
@@ -261,14 +157,31 @@ let styledMapType = new window.google.maps.StyledMapType(
     ]
 
     let largeInfowindow = new window.google.maps.InfoWindow();
+    let icon = {
+      anchor: new window.google.maps.Point(172.268, 501.67),
+      // url: 'https://www.shareicon.net/data/128x128/2015/09/27/108149_map_512x512.png',
+      // scaledSize: new window.google.maps.Size(30, 30)
+      path: 'M 172.268,501.67 C 26.97,291.031 0,269.413 0,192 0,85.961 85.961,0 192,0 c 106.039,0 192,85.961 192,192 0,77.413 -26.97,99.031 -172.268,309.67 -9.535,13.774 -29.93,13.773 -39.464,0 z',
+        fillColor: '#000000',
+        fillOpacity: 1,
+        strokeColor: '#000',
+        strokeWeight: 2,
+        scale: .06
+}
+
     // Style the markers a bit. This will be our listing marker icon.
-    var defaultIcon = makeMarkerIcon('0091ff');
+    let defaultIcon = icon;
     // Create a "highlighted location" marker color for when the user
     // mouses over the marker.
-    var highlightedIcon = makeMarkerIcon('FFFF24');
-    let icon = {
-      url: 'https://www.shareicon.net/data/128x128/2015/09/27/108149_map_512x512.png',
-      scaledSize: new window.google.maps.Size(30, 30)
+    let highlightedIcon =  {
+      anchor: new window.google.maps.Point(172.268,501.67),
+
+      path: 'M 172.268,501.67 C 26.97,291.031 0,269.413 0,192 0,85.961 85.961,0 192,0 c 106.039,0 192,85.961 192,192 0,77.413 -26.97,99.031 -172.268,309.67 -9.535,13.774 -29.93,13.773 -39.464,0 z',
+        fillColor: '#ffffff',
+        fillOpacity: 1,
+        strokeColor: '#000',
+        strokeWeight: 2,
+        scale: .06
     }
 
     // The following group uses the location array to create an array of markers on initialize.
@@ -283,7 +196,7 @@ let styledMapType = new window.google.maps.StyledMapType(
         draggable: false,
         animation: window.google.maps.Animation.DROP,
         id: i,
-        // icon: icon
+        icon: icon
       })
       map.mapTypes.set('styled_map', styledMapType);
       map.setMapTypeId('styled_map');
