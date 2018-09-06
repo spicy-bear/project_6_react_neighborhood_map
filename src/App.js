@@ -221,6 +221,7 @@ let styledMapType = new window.google.maps.StyledMapType(
       marker.addListener('mouseout', function() {
         this.setIcon(defaultIcon)
       })
+
     }
     showListings()
     document.getElementById('hide-listings').addEventListener('click', hideListings)
@@ -250,6 +251,9 @@ let styledMapType = new window.google.maps.StyledMapType(
       // Make sure the search is re-done if the poly is changed.
       polygon.getPath().addListener('set_at', searchWithinPolygon)
       polygon.getPath().addListener('insert_at', searchWithinPolygon)
+      //polygon.getPath().computeArea(polyon)
+      let calculatedArea = window.google.maps.geometry.spherical.computeArea(polygon.getPath())
+      window.alert(parseInt(calculatedArea).toFixed(2) + ' sqaure meters')
       })
   }
 
