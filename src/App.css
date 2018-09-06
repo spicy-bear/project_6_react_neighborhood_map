@@ -112,18 +112,18 @@ hr {
 #calulatedDistance{
   padding-top:1%;
   display:none;
-  width:70%;
+  width:100%;
 }
 #search-within-time {
   width: 24%;
   margin-left: 10px;
 }
 #search-within-time-text {
-  width: 40%;
+  width: 30%;
   position: relative;
   height: 22px;
 }
-.text {
+.text, label {
   font-size: 12px;
 }
 

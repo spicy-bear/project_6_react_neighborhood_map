@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import './App.css'
 
-let map;
-let markers = [];
-let polygon = null;
+let map
+let markers = []
+let polygon = null
 
 window.initMap = function() {
   //let styles =
@@ -158,7 +158,7 @@ let styledMapType = new window.google.maps.StyledMapType(
   ]
 
   // Initialize the drawing manager.
-  var drawingManager = new window.google.maps.drawing.DrawingManager({
+  let drawingManager = new window.google.maps.drawing.DrawingManager({
     drawingMode: window.google.maps.drawing.OverlayType.POLYGON,
     drawingControl: true,
     drawingControlOptions: {
@@ -169,7 +169,7 @@ let styledMapType = new window.google.maps.StyledMapType(
     }
   })
 
-  let largeInfowindow = new window.google.maps.InfoWindow();
+  let largeInfowindow = new window.google.maps.InfoWindow()
 // Style the markers a bit. This will be our listing marker icon.
   let defaultIcon = {
     anchor: new window.google.maps.Point(172.268, 501.67),
@@ -272,15 +272,15 @@ let styledMapType = new window.google.maps.StyledMapType(
   function populateInfoWindow(marker, infowindow) {
     // Check to make sure the infowindow is not already opened on this marker.
     if (infowindow.marker !== marker) {
-      infowindow.setContent('');
-      infowindow.marker = marker;
-      infowindow.open(map, marker);
+      infowindow.setContent('')
+      infowindow.marker = marker
+      infowindow.open(map, marker)
       // Make sure the marker property is cleared if the infowindow is closed.
       infowindow.addListener('closeclick',function(){
         infowindow.setMarker = null
       })
-    let streetViewService = new window.google.maps.StreetViewService();
-    let radius = 50;
+    let streetViewService = new window.google.maps.StreetViewService()
+    let radius = 50
     // In case the status is OK, which means the pano was found, compute the
     // position of the streetview image, then calculate the heading, then get a
     // panorama from that and set the options
@@ -309,15 +309,15 @@ let styledMapType = new window.google.maps.StyledMapType(
       }
       // Use streetview service to get the closest streetview image within
       // 50 meters of the markers position
-      streetViewService.getPanoramaByLocation(marker.position, radius, getStreetView);
+      streetViewService.getPanoramaByLocation(marker.position, radius, getStreetView)
       // Open the infowindow on the correct marker.
-      infowindow.open(map, marker);
+      infowindow.open(map, marker)
     }
   }
 
 // This function will loop through the markers array and display them all.
   function showListings() {
-    let bounds = new window.google.maps.LatLngBounds();
+    let bounds = new window.google.maps.LatLngBounds()
     // Extend the boundaries of the map for each marker and display the marker
     for (let i = 0; i < markers.length; i++) {
       markers[i].setMap(map)
@@ -335,42 +335,42 @@ let styledMapType = new window.google.maps.StyledMapType(
   // This shows and hides (respectively) the drawing options.
   function toggleDrawing(drawingManager) {
     if (drawingManager.map) {
-      drawingManager.setMap(null);
+      drawingManager.setMap(null)
       // In case the user drew anything, get rid of the polygon
       if (polygon !== null) {
-        polygon.setMap(null);
+        polygon.setMap(null)
       }
     } else {
-      drawingManager.setMap(map);
+      drawingManager.setMap(map)
     }
   }
 
   //This shows and hides (respectively) the search options.
   function toggleSearch() {
-    let searchbar = document.getElementById("focus-on-area-text");
+    let searchbar = document.getElementById("focus-on-area-text")
         if (searchbar.style.display === "none") {
-            searchbar.style.display = "inline";
+            searchbar.style.display = "inline"
         } else {
-            searchbar.style.display = "none";
+            searchbar.style.display = "none"
         }
-    let findbutton = document.getElementById("focus-on-area");
+    let findbutton = document.getElementById("focus-on-area")
         if (findbutton.style.display === "none") {
-            findbutton.style.display = "inline";
+            findbutton.style.display = "inline"
             document.getElementById('focus-on-area').addEventListener('click', function() {
               focusOnArea()
             })
         } else {
-            findbutton.style.display = "none";
+            findbutton.style.display = "none"
         }
   }
 
   //This shows and hides (respectively) the search options.
   function toggleDistance() {
-    let distanceSearch = document.getElementById("calulatedDistance");
+    let distanceSearch = document.getElementById("calulatedDistance")
         if (distanceSearch.style.display === "none") {
-            distanceSearch.style.display = "inline-block";
+            distanceSearch.style.display = "inline-block"
         }  else {
-            distanceSearch.style.display = "none";
+            distanceSearch.style.display = "none"
         }
   }
 
@@ -380,19 +380,19 @@ let styledMapType = new window.google.maps.StyledMapType(
   // user can specify an exact area of search.
   //let polygon = window.polygon;
   function searchWithinPolygon() {
-    for (var i = 0; i < markers.length; i++) {
+    for (let i = 0; i < markers.length; i++) {
       if (window.google.maps.geometry.poly.containsLocation(markers[i].position, polygon)) {
-        markers[i].setMap(map);
+        markers[i].setMap(map)
       } else {
-        markers[i].setMap(null);
+        markers[i].setMap(null)
       }
     }
   }
   function focusOnArea() {
     // Initialize the geocoder.
-    var geocoder = new window.google.maps.Geocoder()
+    let geocoder = new window.google.maps.Geocoder()
     // Get the address or place that the user entered.
-    var address = window.document.getElementById('focus-on-area-text').value;
+    let address = window.document.getElementById('focus-on-area-text').value
     // Make sure the address isn't blank.
     if (address === '') {
       window.alert('You must enter an area, or address.')
@@ -405,7 +405,7 @@ let styledMapType = new window.google.maps.StyledMapType(
         }, function(results, status) {
           if (status === window.google.maps.GeocoderStatus.OK) {
             map.setCenter(results[0].geometry.location)
-            map.setZoom(15);
+            map.setZoom(15)
           } else if
             (status === window.google.maps.GeocoderStatus.ZERO_RESULTS) {
               window.alert('Zero results, try another search')
@@ -432,22 +432,19 @@ let styledMapType = new window.google.maps.StyledMapType(
 
                       } else {
                         window.alert('We could not find that location - try entering a more' +
-                            ' specific place.');
+                            ' specific place.')
                       }
         })
     }
   }
-
-
-
 
   // This function allows the user to input a desired travel time, in
   // minutes, and a travel mode, and a location - and only show the listings
   // that are within that travel time (via that travel mode) of the location
   function searchWithinTime() {
     // Initialize the distance matrix service.
-    var distanceMatrixService = new window.google.maps.DistanceMatrixService()
-    var address = document.getElementById('search-within-time-text').value
+    let distanceMatrixService = new window.google.maps.DistanceMatrixService()
+    let address = document.getElementById('search-within-time-text').value
     // Check to make sure the place entered isn't blank.
     if (address === '') {
       window.alert('You must enter an address.')
@@ -456,12 +453,30 @@ let styledMapType = new window.google.maps.StyledMapType(
       // Use the distance matrix service to calculate the duration of the
       // routes between all our markers, and the destination address entered
       // by the user. Then put all the origins into an origin matrix.
-      var origins = []
-      for (var i = 0; i < markers.length; i++) {
-        origins[i] = markers[i].position;
+      let origins = []
+      for (let i = 0; i < markers.length; i++) {
+        origins[i] = markers[i].position
       }
-      var destination = address
-      var mode = document.getElementById('mode').value
+      let destination = address
+      let mode = document.getElementById('mode').value
+      let highways
+      if (document.getElementById("highwaysCheckboxId").checked) {
+        highways === true
+      } else {
+        highways === false
+      }
+      let tolls
+      if (document.getElementById("tollsCheckboxId").checked) {
+        tolls === true
+      } else {
+        tolls === false
+      }
+      let ferries
+      if (document.getElementById("ferriesCheckboxId").checked) {
+        ferries === true
+      } else {
+        ferries === false
+      }
       // Now that both the origins and destination are defined, get all the
       // info for the distances between them.
       distanceMatrixService.getDistanceMatrix({
@@ -469,54 +484,58 @@ let styledMapType = new window.google.maps.StyledMapType(
         destinations: [destination],
         travelMode: window.google.maps.TravelMode[mode],
         unitSystem: window.google.maps.UnitSystem.IMPERIAL,
+        avoidHighways: window.google.maps.TravelMode[highways],
+        avoidTolls: window.google.maps.TravelMode[tolls],
+        avoidFerries: window.google.maps.TravelMode[ferries]
       }, function(response, status) {
         if (status !== window.google.maps.DistanceMatrixStatus.OK) {
           window.alert('Error was: ' + status)
         } else {
           displayMarkersWithinTime(response)
         }
-      });
+      })
     }
   }
+
   // This function will go through each of the results, and,
   // if the distance is LESS than the value in the picker, show it on the map.
   function displayMarkersWithinTime(response) {
-    var maxDuration = document.getElementById('max-duration').value;
-    var origins = response.originAddresses
-    var destinations = response.destinationAddresses
+    let maxDuration = document.getElementById('max-duration').value
+    let origins = response.originAddresses
+    let destinations = response.destinationAddresses
     // Parse through the results, and get the distance and duration of each.
     // Because there might be  multiple origins and destinations we have a nested loop
     // Then, make sure at least 1 result was found.
-    var atLeastOne = false
-    for (var i = 0; i < origins.length; i++) {
-      var results = response.rows[i].elements;
-      for (var j = 0; j < results.length; j++) {
-        var element = results[j]
+    let atLeastOne = false
+    for (let i = 0; i < origins.length; i++) {
+      let results = response.rows[i].elements;
+      for (let j = 0; j < results.length; j++) {
+        let element = results[j]
         if (element.status === "OK") {
           // The distance is returned in feet, but the TEXT is in miles. If we wanted to switch
           // the function to show markers within a user-entered DISTANCE, we would need the
           // value for distance, but for now we only need the text.
-          var distanceText = element.distance.text;
+          let distanceText = element.distance.text
           // Duration value is given in seconds so we make it MINUTES. We need both the value
           // and the text.
-          var duration = element.duration.value / 60;
-          var durationText = element.duration.text;
+          let duration = element.duration.value / 60
+          let durationText = element.duration.text
           if (duration <= maxDuration) {
             //the origin [i] should = the markers[i]
             markers[i].setMap(map)
             atLeastOne = true
             // Create a mini infowindow to open immediately and contain the
             // distance and duration
-            var infowindow = new window.google.maps.InfoWindow({
+            let infowindow = new window.google.maps.InfoWindow({
               content: durationText + ' away, ' + distanceText
-            });
+            })
             infowindow.open(map, markers[i])
             // Put this in so that this small window closes if the user clicks
             // the marker, when the big infowindow opens
             markers[i].infowindow = infowindow
             window.google.maps.event.addListener(markers[i], 'click', function() {
               this.infowindow.close()
-            });
+            })
           }
         }
       }
@@ -570,9 +589,16 @@ export default class App extends Component {
               <option value="DRIVING">drive</option>
               <option value="WALKING">walk</option>
               <option value="BICYCLING">bike</option>
-              <option value="TRANSIT">transit ride</option>
+              <option value="TRANSIT">ride</option>
             </select>
-            <span className="text">of </span>
+            <span className="text"> Avoid </span>
+            <label for="Highways">Highways</label>
+            <input id="highwaysCheckboxId" type="checkbox" value="HIGHWAYS" name="Highways"/>
+            <label for="Tolls">Tolls</label>
+            <input id="tollsCheckboxId" type="checkbox" value="TOLLS" name="Tolls"/>
+            <label for="Ferries">Ferries</label>
+            <input id="ferriesCheckboxId" type="checkbox" value="FERRIES" name="Ferries"/>
+            <span className="text"> of </span>
             <input id="search-within-time-text" type="text" placeholder="Ex: Lyons Classic Pinball"/>
             <input id="search-within-time" className="btn" type="button" value="Find"/>
             </div>
