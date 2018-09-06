@@ -239,6 +239,7 @@ let styledMapType = new window.google.maps.StyledMapType(
       searchWithinTime()
     })
 
+
     // Add an event listener so that the polygon is captured,  call the
     // searchWithinPolygon function. This will show the markers in the polygon,
     // and hide any outside of it.
@@ -497,6 +498,70 @@ let styledMapType = new window.google.maps.StyledMapType(
     }
   }
 
+
+    // This function is in response to the user selecting "show route" on one
+    // of the markers within the calculated distance. This will display the route
+    // on the map.
+    function displayDirections(origin) {
+      hideListings()
+      let directionsService = new window.google.maps.DirectionsService()
+      // Get the destination address from the user entered value.
+      let destinationAddress =
+          document.getElementById('search-within-time-text').value
+      // Get mode again from the user entered value.
+      let mode = document.getElementById('mode').value
+      directionsService.route({
+        // The origin is the passed in marker's position.
+        origin: origin,
+        // The destination is user entered address.
+        destination: destinationAddress,
+        travelMode: window.google.maps.TravelMode[mode]
+      }, function(response, status) {
+        if (status === window.google.maps.DirectionsStatus.OK) {
+          let directionsDisplay = new window.google.maps.DirectionsRenderer({
+            map: map,
+            directions: response,
+            draggable: true,
+            polylineOptions: {
+              strokeColor: 'green'
+            }
+          })
+        } else if
+          (status === window.google.maps.GeocoderStatus.ZERO_RESULTS) {
+            window.alert('Zero results for directions, try another search')
+
+          } else if
+            (status === window.google.maps.GeocoderStatus.MAX_WAYPOINTS_EXCEEDED) {
+              window.alert('Remove some waypoints and try again')
+
+            } else if
+              (status === window.google.maps.GeocoderStatus.MAX_ROUTE_LENGTH_EXCEEDED) {
+                window.alert('Route length is too long, try something else')
+
+              } else if
+                (status === window.google.maps.GeocoderStatus.INVALID_REQUEST) {
+                  window.alert('Inalid Request, try another search or contact developer')
+
+                }  else if
+                  (status === window.google.maps.GeocoderStatus.OVER_QUERY_LIMIT) {
+                    window.alert('Over query limit for directions, try again later')
+
+                  } else if
+                    (status === window.google.maps.GeocoderStatus.REQUEST_DENIED) {
+                      window.alert('Request Denied for directions, try again')
+
+                    } else if
+                    (status === window.google.maps.GeocoderStatus.UNKNOWN_ERROR) {
+                      window.alert('Unknown Error, possible issue with server try again later')
+
+                    } else {
+                      window.alert('Directions request failed due to ' + status)
+        }
+      })
+    }
+
+
+
   // This function will go through each of the results, and,
   // if the distance is LESS than the value in the picker, show it on the map.
   function displayMarkersWithinTime(response) {
@@ -527,7 +592,9 @@ let styledMapType = new window.google.maps.StyledMapType(
             // Create a mini infowindow to open immediately and contain the
             // distance and duration
             let infowindow = new window.google.maps.InfoWindow({
-              content: durationText + ' away, ' + distanceText
+              content: durationText + ' away, ' + distanceText +
+              '<div><input id="route" type="button" value="View Route" onclick =' +
+              '{displayDirections("origins[i]")}></input></div>'
             })
             infowindow.open(map, markers[i])
             // Put this in so that this small window closes if the user clicks
@@ -544,7 +611,6 @@ let styledMapType = new window.google.maps.StyledMapType(
       window.alert('We could not find any locations within that distance!')
     }
   }
-
 
 export default class App extends Component {
   constructor(props) {
@@ -592,12 +658,16 @@ export default class App extends Component {
               <option value="TRANSIT">ride</option>
             </select>
             <span className="text"> Avoid </span>
-            <label for="Highways">Highways</label>
+
+            <label for="Highways"> Highways </label>
             <input id="highwaysCheckboxId" type="checkbox" value="HIGHWAYS" name="Highways"/>
-            <label for="Tolls">Tolls</label>
+
+            <label for="Tolls"> Tolls </label>
             <input id="tollsCheckboxId" type="checkbox" value="TOLLS" name="Tolls"/>
-            <label for="Ferries">Ferries</label>
+
+            <label for="Ferries"> Ferries </label>
             <input id="ferriesCheckboxId" type="checkbox" value="FERRIES" name="Ferries"/>
+
             <span className="text"> of </span>
             <input id="search-within-time-text" type="text" placeholder="Ex: Lyons Classic Pinball"/>
             <input id="search-within-time" className="btn" type="button" value="Find"/>

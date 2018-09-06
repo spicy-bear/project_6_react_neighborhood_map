@@ -112,7 +112,7 @@ hr {
 #calulatedDistance{
   padding-top:1%;
   display:none;
-  width:100%;
+  max-width:100%;
 }
 #search-within-time {
   width: 24%;
@@ -125,6 +125,15 @@ hr {
 }
 .text, label {
   font-size: 12px;
+  text-align: center;
+  cursor: default;
+}
+#highwaysCheckboxId, #tollsCheckboxId, #ferriesCheckboxId {
+    height: 20px;
+    width: 20px;
+}
+#route{
+
 }
 
 /*default create-react-app css*/
