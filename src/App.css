@@ -86,13 +86,14 @@ html, body {
     margin-left: 10px;
   }
   #toggle-search {
-      width: 27%;
-      position: relative;
-      margin-left: 10px;
+    width: 27%;
+    position: relative;
+    margin-left: 10px;
     }
 #focus-on-area-text {
   position: relative;
   width: 30%;
+  height: 22px;
   display:none;
 }
 #focus-on-area {
@@ -101,7 +102,31 @@ html, body {
   display:none;
 }
 hr {
+
 }
+#toggle-distance{
+  width: 27%;
+  position: relative;
+  margin-left: 10px;
+}
+#calulatedDistance{
+  padding-top:1%;
+  display:none;
+  width:70%;
+}
+#search-within-time {
+  width: 24%;
+  margin-left: 10px;
+}
+#search-within-time-text {
+  width: 40%;
+  position: relative;
+  height: 22px;
+}
+.text {
+  font-size: 12px;
+}
+
 /*default create-react-app css*/
 .App {
   text-align: center;

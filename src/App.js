@@ -144,7 +144,7 @@ let styledMapType = new window.google.maps.StyledMapType(
 )
   map = new window.google.maps.Map(document.getElementById('map'), {
     center: {lat: 40.2244, lng: -105.2689},
-    zoom: 16,
+    zoom: 17,
     styles: styledMapType,
     mapTypeControlOptions: { mapTypeIds: ['roadmap', 'satellite', 'hybrid', 'terrain', 'styled_map'] }
   })
@@ -232,7 +232,12 @@ let styledMapType = new window.google.maps.StyledMapType(
     document.getElementById('toggle-search').addEventListener('click', function() {
       toggleSearch()
     })
-
+    document.getElementById('toggle-distance').addEventListener('click', function() {
+      toggleDistance()
+    })
+    document.getElementById('search-within-time').addEventListener('click', function() {
+      searchWithinTime()
+    })
 
     // Add an event listener so that the polygon is captured,  call the
     // searchWithinPolygon function. This will show the markers in the polygon,
@@ -359,6 +364,17 @@ let styledMapType = new window.google.maps.StyledMapType(
         }
   }
 
+  //This shows and hides (respectively) the search options.
+  function toggleDistance() {
+    let distanceSearch = document.getElementById("calulatedDistance");
+        if (distanceSearch.style.display === "none") {
+            distanceSearch.style.display = "inline-block";
+        }  else {
+            distanceSearch.style.display = "none";
+        }
+  }
+
+
   // This function hides all markers outside the polygon,
   // and shows only the ones within it. This is so that the
   // user can specify an exact area of search.
@@ -422,9 +438,98 @@ let styledMapType = new window.google.maps.StyledMapType(
     }
   }
 
+
+
+
+  // This function allows the user to input a desired travel time, in
+  // minutes, and a travel mode, and a location - and only show the listings
+  // that are within that travel time (via that travel mode) of the location
+  function searchWithinTime() {
+    // Initialize the distance matrix service.
+    var distanceMatrixService = new window.google.maps.DistanceMatrixService()
+    var address = document.getElementById('search-within-time-text').value
+    // Check to make sure the place entered isn't blank.
+    if (address === '') {
+      window.alert('You must enter an address.')
+    } else {
+      hideListings()
+      // Use the distance matrix service to calculate the duration of the
+      // routes between all our markers, and the destination address entered
+      // by the user. Then put all the origins into an origin matrix.
+      var origins = []
+      for (var i = 0; i < markers.length; i++) {
+        origins[i] = markers[i].position;
+      }
+      var destination = address
+      var mode = document.getElementById('mode').value
+      // Now that both the origins and destination are defined, get all the
+      // info for the distances between them.
+      distanceMatrixService.getDistanceMatrix({
+        origins: origins,
+        destinations: [destination],
+        travelMode: window.google.maps.TravelMode[mode],
+        unitSystem: window.google.maps.UnitSystem.IMPERIAL,
+      }, function(response, status) {
+        if (status !== window.google.maps.DistanceMatrixStatus.OK) {
+          window.alert('Error was: ' + status)
+        } else {
+          displayMarkersWithinTime(response)
+        }
+      });
+    }
+  }
+  // This function will go through each of the results, and,
+  // if the distance is LESS than the value in the picker, show it on the map.
+  function displayMarkersWithinTime(response) {
+    var maxDuration = document.getElementById('max-duration').value;
+    var origins = response.originAddresses
+    var destinations = response.destinationAddresses
+    // Parse through the results, and get the distance and duration of each.
+    // Because there might be  multiple origins and destinations we have a nested loop
+    // Then, make sure at least 1 result was found.
+    var atLeastOne = false
+    for (var i = 0; i < origins.length; i++) {
+      var results = response.rows[i].elements;
+      for (var j = 0; j < results.length; j++) {
+        var element = results[j]
+        if (element.status === "OK") {
+          // The distance is returned in feet, but the TEXT is in miles. If we wanted to switch
+          // the function to show markers within a user-entered DISTANCE, we would need the
+          // value for distance, but for now we only need the text.
+          var distanceText = element.distance.text;
+          // Duration value is given in seconds so we make it MINUTES. We need both the value
+          // and the text.
+          var duration = element.duration.value / 60;
+          var durationText = element.duration.text;
+          if (duration <= maxDuration) {
+            //the origin [i] should = the markers[i]
+            markers[i].setMap(map)
+            atLeastOne = true
+            // Create a mini infowindow to open immediately and contain the
+            // distance and duration
+            var infowindow = new window.google.maps.InfoWindow({
+              content: durationText + ' away, ' + distanceText
+            });
+            infowindow.open(map, markers[i])
+            // Put this in so that this small window closes if the user clicks
+            // the marker, when the big infowindow opens
+            markers[i].infowindow = infowindow
+            window.google.maps.event.addListener(markers[i], 'click', function() {
+              this.infowindow.close()
+            });
+          }
+        }
+      }
+    }
+    if (!atLeastOne) {
+      window.alert('We could not find any locations within that distance!')
+    }
+  }
+
+
 export default class App extends Component {
   constructor(props) {
-      super(props);
+      super(props)
       this.state = {
         map: {}
       }
@@ -448,9 +553,30 @@ export default class App extends Component {
             <input id="hide-listings" className="btn" type="button" value="Hide Listings" />
             <input id="toggle-drawing" className="btn" type="button" value="Drawing Tools" />
             <input id="toggle-search" className="btn" type="button" value="Search"/>
+            <input id="toggle-distance" className="btn" type="button" value="Calculate"/>
             <hr />
             <input id="focus-on-area-text" type="text" placeholder="Enter search area"/>
             <input id="focus-on-area" className="btn" type="button" value="Find"/>
+
+            <div id="calulatedDistance">
+            <span className="text"> Within </span>
+            <select id="max-duration">
+              <option value="10">10 min</option>
+              <option value="15">15 min</option>
+              <option value="30">30 min</option>
+              <option value="60">1 hour</option>
+            </select>
+            <select id="mode">
+              <option value="DRIVING">drive</option>
+              <option value="WALKING">walk</option>
+              <option value="BICYCLING">bike</option>
+              <option value="TRANSIT">transit ride</option>
+            </select>
+            <span className="text">of </span>
+            <input id="search-within-time-text" type="text" placeholder="Ex: Lyons Classic Pinball"/>
+            <input id="search-within-time" className="btn" type="button" value="Find"/>
+            </div>
+
           </div>
         </div>
         </div>
