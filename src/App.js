@@ -229,6 +229,9 @@ let styledMapType = new window.google.maps.StyledMapType(
     document.getElementById('toggle-drawing').addEventListener('click', function() {
       toggleDrawing(drawingManager)
     })
+    document.getElementById('focus-on-area').addEventListener('click', function() {
+      focusOnArea()
+    })
 
     // Add an event listener so that the polygon is captured,  call the
     // searchWithinPolygon function. This will show the markers in the polygon,
@@ -253,7 +256,7 @@ let styledMapType = new window.google.maps.StyledMapType(
       polygon.getPath().addListener('insert_at', searchWithinPolygon)
       //polygon.getPath().computeArea(polyon)
       let calculatedArea = window.google.maps.geometry.spherical.computeArea(polygon.getPath())
-      window.alert(parseInt(calculatedArea).toFixed(2) + ' sqaure meters')
+      window.alert(parseInt(calculatedArea).toFixed(2) + ' square meters')
       })
   }
 
@@ -290,7 +293,10 @@ let styledMapType = new window.google.maps.StyledMapType(
           }
         let panorama = new window.google.maps.StreetViewPanorama(
           document.getElementById('panorama'), panoramaOptions)
-      } else {
+      } else if (status === window.google.maps.StreetViewStatus.UNKNOWN_ERROR) {
+        window.alert('Streetview Unknown Error, try another search')
+        }
+      else {
         infowindow.setContent('<div>' + marker.title + '</div>' +
           '<div>No Street View Found</div>')
       }
@@ -345,6 +351,55 @@ let styledMapType = new window.google.maps.StyledMapType(
       }
     }
   }
+  function focusOnArea() {
+    // Initialize the geocoder.
+    var geocoder = new window.google.maps.Geocoder()
+    // Get the address or place that the user entered.
+    var address = window.document.getElementById('focus-on-area-text').value;
+    // Make sure the address isn't blank.
+    if (address == '') {
+      window.alert('You must enter an area, or address.')
+    } else {
+      // Geocode the address/area entered to get the center. Then, center the map
+      // on it and zoom in
+      geocoder.geocode(
+        { address: address,
+          componentRestrictions: {locality: 'Lyons'}
+        }, function(results, status) {
+          if (status == window.google.maps.GeocoderStatus.OK) {
+            map.setCenter(results[0].geometry.location)
+            map.setZoom(15);
+          } else if
+            (status == window.google.maps.GeocoderStatus.ZERO_RESULTS) {
+              window.alert('Zero results, try another search')
+
+            } else if
+              (status == window.google.maps.GeocoderStatus.OVER_QUERY_LIMIT) {
+                window.alert('You are over your search query limit, try again later')
+
+              } else if
+                (status == window.google.maps.GeocoderStatus.REQUEST_DENIED) {
+                  window.alert('Request Denied, try another search')
+
+                } else if
+                  (status == window.google.maps.GeocoderStatus.INVALID_REQUEST) {
+                    window.alert('Inalid Request, try another search or contact developer')
+
+                  }  else if
+                    (status == window.google.maps.GeocoderStatus.UNKNOWN_ERROR) {
+                      window.alert('Unknown Error, possible issue with server try again later')
+
+                    } else if
+                      (status == window.google.maps.GeocoderStatus.ERROR) {
+                        window.alert('Error, possible issue with server try again')
+
+                      } else {
+                        window.alert('We could not find that location - try entering a more' +
+                            ' specific place.');
+                      }
+        })
+    }
+  }
 
 export default class App extends Component {
   constructor(props) {
@@ -371,6 +426,9 @@ export default class App extends Component {
             <input id="show-listings" className="btn" type="button" value="Show Listings" />
             <input id="hide-listings" className="btn" type="button" value="Hide Listings" />
             <input id="toggle-drawing" className="btn" type="button" value="Drawing Tools" />
+              <hr />
+            <input id="focus-on-area-text" type="text" placeholder="Enter search area" />
+            <input id="focus-on-area" className="btn" type="button" value="Search" />
           </div>
         </div>
         </div>

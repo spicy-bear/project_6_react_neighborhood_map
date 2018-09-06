@@ -85,7 +85,14 @@ html, body {
     position: relative;
     margin-left: 10px;
   }
-
+#focus-on-area-text {
+  position: relative;
+  width: 70%;
+}
+#focus-on-area {
+  width: 24%;
+  margin-left: 10px;
+}
 /*default create-react-app css*/
 .App {
   text-align: center;
