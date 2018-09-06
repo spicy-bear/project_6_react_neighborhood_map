@@ -85,13 +85,22 @@ html, body {
     position: relative;
     margin-left: 10px;
   }
+  #toggle-search {
+      width: 27%;
+      position: relative;
+      margin-left: 10px;
+    }
 #focus-on-area-text {
   position: relative;
-  width: 70%;
+  width: 30%;
+  display:none;
 }
 #focus-on-area {
   width: 24%;
   margin-left: 10px;
+  display:none;
+}
+hr {
 }
 /*default create-react-app css*/
 .App {

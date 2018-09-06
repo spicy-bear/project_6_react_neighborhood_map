@@ -229,9 +229,10 @@ let styledMapType = new window.google.maps.StyledMapType(
     document.getElementById('toggle-drawing').addEventListener('click', function() {
       toggleDrawing(drawingManager)
     })
-    document.getElementById('focus-on-area').addEventListener('click', function() {
-      focusOnArea()
+    document.getElementById('toggle-search').addEventListener('click', function() {
+      toggleSearch()
     })
+
 
     // Add an event listener so that the polygon is captured,  call the
     // searchWithinPolygon function. This will show the markers in the polygon,
@@ -338,6 +339,26 @@ let styledMapType = new window.google.maps.StyledMapType(
       drawingManager.setMap(map);
     }
   }
+
+  //This shows and hides (respectively) the search options.
+  function toggleSearch() {
+    let searchbar = document.getElementById("focus-on-area-text");
+        if (searchbar.style.display === "none") {
+            searchbar.style.display = "inline";
+        } else {
+            searchbar.style.display = "none";
+        }
+    let findbutton = document.getElementById("focus-on-area");
+        if (findbutton.style.display === "none") {
+            findbutton.style.display = "inline";
+            document.getElementById('focus-on-area').addEventListener('click', function() {
+              focusOnArea()
+            })
+        } else {
+            findbutton.style.display = "none";
+        }
+  }
+
   // This function hides all markers outside the polygon,
   // and shows only the ones within it. This is so that the
   // user can specify an exact area of search.
@@ -357,7 +378,7 @@ let styledMapType = new window.google.maps.StyledMapType(
     // Get the address or place that the user entered.
     var address = window.document.getElementById('focus-on-area-text').value;
     // Make sure the address isn't blank.
-    if (address == '') {
+    if (address === '') {
       window.alert('You must enter an area, or address.')
     } else {
       // Geocode the address/area entered to get the center. Then, center the map
@@ -366,31 +387,31 @@ let styledMapType = new window.google.maps.StyledMapType(
         { address: address,
           componentRestrictions: {locality: 'Lyons'}
         }, function(results, status) {
-          if (status == window.google.maps.GeocoderStatus.OK) {
+          if (status === window.google.maps.GeocoderStatus.OK) {
             map.setCenter(results[0].geometry.location)
             map.setZoom(15);
           } else if
-            (status == window.google.maps.GeocoderStatus.ZERO_RESULTS) {
+            (status === window.google.maps.GeocoderStatus.ZERO_RESULTS) {
               window.alert('Zero results, try another search')
 
             } else if
-              (status == window.google.maps.GeocoderStatus.OVER_QUERY_LIMIT) {
+              (status === window.google.maps.GeocoderStatus.OVER_QUERY_LIMIT) {
                 window.alert('You are over your search query limit, try again later')
 
               } else if
-                (status == window.google.maps.GeocoderStatus.REQUEST_DENIED) {
+                (status === window.google.maps.GeocoderStatus.REQUEST_DENIED) {
                   window.alert('Request Denied, try another search')
 
                 } else if
-                  (status == window.google.maps.GeocoderStatus.INVALID_REQUEST) {
+                  (status === window.google.maps.GeocoderStatus.INVALID_REQUEST) {
                     window.alert('Inalid Request, try another search or contact developer')
 
                   }  else if
-                    (status == window.google.maps.GeocoderStatus.UNKNOWN_ERROR) {
+                    (status === window.google.maps.GeocoderStatus.UNKNOWN_ERROR) {
                       window.alert('Unknown Error, possible issue with server try again later')
 
                     } else if
-                      (status == window.google.maps.GeocoderStatus.ERROR) {
+                      (status === window.google.maps.GeocoderStatus.ERROR) {
                         window.alert('Error, possible issue with server try again')
 
                       } else {
@@ -426,9 +447,10 @@ export default class App extends Component {
             <input id="show-listings" className="btn" type="button" value="Show Listings" />
             <input id="hide-listings" className="btn" type="button" value="Hide Listings" />
             <input id="toggle-drawing" className="btn" type="button" value="Drawing Tools" />
-              <hr />
-            <input id="focus-on-area-text" type="text" placeholder="Enter search area" />
-            <input id="focus-on-area" className="btn" type="button" value="Search" />
+            <input id="toggle-search" className="btn" type="button" value="Search"/>
+            <hr />
+            <input id="focus-on-area-text" type="text" placeholder="Enter search area"/>
+            <input id="focus-on-area" className="btn" type="button" value="Find"/>
           </div>
         </div>
         </div>
