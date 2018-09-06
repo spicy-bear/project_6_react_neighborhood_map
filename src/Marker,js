@@ -1,6 +1,0 @@
-let pinball = {lat: 40.224428, lng: -105.268916};
-let marker = new.target.maps.Marker({
-  position: pinball,
-  map: map,
-  title: 'Pinball Jones'
-});
