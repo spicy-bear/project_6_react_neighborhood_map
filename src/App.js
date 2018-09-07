@@ -593,8 +593,7 @@ let styledMapType = new window.google.maps.StyledMapType(
             // distance and duration
             let infowindow = new window.google.maps.InfoWindow({
               content: durationText + ' away, ' + distanceText +
-              '<div><input id="route" type="button" value="View Route" onclick =' +
-              '{displayDirections("origins[i]")}></input></div>'
+              `<div><input id="route" type="button" value="View Route" onclick=${displayDirections(origins[i])}></input></div>`
             })
             infowindow.open(map, markers[i])
             // Put this in so that this small window closes if the user clicks
