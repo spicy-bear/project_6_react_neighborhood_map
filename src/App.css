@@ -90,19 +90,24 @@ html, body {
     position: relative;
     margin-left: 10px;
     }
-#focus-on-area-text {
+#focus-on-area-text, #places-search {
   position: relative;
   width: 30%;
   height: 22px;
   display:none;
 }
-#focus-on-area {
+#places-search-title, #area-search-title {
+  display:none;
+  min-width: 160px;
+  max-width: 160px;
+}
+#focus-on-area, #go-places {
   width: 24%;
   margin-left: 10px;
   display:none;
 }
-hr {
-
+#space {
+  margin-top:8px;
 }
 #toggle-distance{
   width: 27%;
@@ -112,6 +117,7 @@ hr {
 #calulatedDistance{
   padding-top:1%;
   display:none;
+  min-width:100%;
   max-width:100%;
 }
 #search-within-time {
@@ -132,9 +138,7 @@ hr {
     height: 20px;
     width: 20px;
 }
-#route{
 
-}
 
 /*default create-react-app css*/
 .App {

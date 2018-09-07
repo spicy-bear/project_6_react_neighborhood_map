@@ -4,6 +4,7 @@ import './App.css'
 let map
 let markers = []
 let polygon = null
+let placeMarkers = []
 
 window.initMap = function() {
   //let styles =
@@ -149,6 +150,22 @@ let styledMapType = new window.google.maps.StyledMapType(
     mapTypeControlOptions: { mapTypeIds: ['roadmap', 'satellite', 'hybrid', 'terrain', 'styled_map'] }
   })
 
+  // This autocomplete is for use in the search within time entry box.
+  let timeAutocomplete = new window.google.maps.places.Autocomplete(
+      document.getElementById('search-within-time-text'))
+  // This autocomplete is for use in the geocoder entry box.
+  let zoomAutocomplete = new window.google.maps.places.Autocomplete(
+      document.getElementById('focus-on-area-text'))
+      //Bias the boundaries within the map for the zoom to area text.
+      zoomAutocomplete.bindTo('bounds', map)
+
+  // Create a searchbox in order to execute a places search
+  let searchBox = new window.google.maps.places.SearchBox(
+      document.getElementById('places-search'))
+  // Bias the searchbox to within the bounds of the map.
+  searchBox.setBounds(map.getBounds())
+
+
   let locations = [
     {title: 'Lyons Classic Pinball', location: {lat: 40.224428, lng: -105.268916}},
     {title: 'Planet Bluegrass', location: {lat: 40.2269, lng: -105.2733}},
@@ -224,7 +241,7 @@ let styledMapType = new window.google.maps.StyledMapType(
 
     }
     showListings()
-    document.getElementById('hide-listings').addEventListener('click', hideListings)
+    document.getElementById('hide-listings').addEventListener('click', hideMarkers)
     document.getElementById('show-listings').addEventListener('click', showListings)
     document.getElementById('toggle-drawing').addEventListener('click', function() {
       toggleDrawing(drawingManager)
@@ -239,6 +256,14 @@ let styledMapType = new window.google.maps.StyledMapType(
       searchWithinTime()
     })
 
+    // Listen for the event fired when the user selects a prediction from the
+    // picklist and retrieve more details for that place.
+    searchBox.addListener('places_changed', function() {
+      searchBoxPlaces(this)
+    })
+    // Listen for the event fired when the user selects a prediction and clicks
+    // "go" more details for that place.
+    document.getElementById('go-places').addEventListener('click', textSearchPlaces)
 
     // Add an event listener so that the polygon is captured,  call the
     // searchWithinPolygon function. This will show the markers in the polygon,
@@ -249,7 +274,7 @@ let styledMapType = new window.google.maps.StyledMapType(
       // If there is, get rid of it and remove the markers
       if (polygon) {
         polygon.setMap(null)
-        hideListings(markers)
+        hideMarkers(markers)
       }
       // Switching the drawing mode to the HAND (i.e., no longer drawing).
       drawingManager.setDrawingMode(null)
@@ -327,7 +352,7 @@ let styledMapType = new window.google.maps.StyledMapType(
     map.fitBounds(bounds)
   }
   // This function will loop through the listings and hide them all.
-  function hideListings() {
+  function hideMarkers(markers) {
     for (let i = 0; i < markers.length; i++) {
       markers[i].setMap(null)
     }
@@ -362,6 +387,30 @@ let styledMapType = new window.google.maps.StyledMapType(
             })
         } else {
             findbutton.style.display = "none"
+        }
+    let nearbyplaces = document.getElementById("places-search")
+        if (nearbyplaces.style.display === "none") {
+            nearbyplaces.style.display = "inline"
+        } else {
+            nearbyplaces.style.display = "none"
+        }
+    let nearbyplacessearch = document.getElementById("go-places")
+        if (nearbyplacessearch.style.display === "none") {
+            nearbyplacessearch.style.display = "inline"
+        } else {
+            nearbyplacessearch.style.display = "none"
+        }
+    let placesSearch = document.getElementById("places-search-title")
+        if (placesSearch.style.display === "none") {
+            placesSearch.style.display = "inline-block"
+        } else {
+            placesSearch.style.display = "none"
+        }
+    let areaSearch = document.getElementById("area-search-title")
+        if (areaSearch.style.display === "none") {
+            areaSearch.style.display = "inline-block"
+        } else {
+            areaSearch.style.display = "none"
         }
   }
 
@@ -450,7 +499,7 @@ let styledMapType = new window.google.maps.StyledMapType(
     if (address === '') {
       window.alert('You must enter an address.')
     } else {
-      hideListings()
+      hideMarkers()
       // Use the distance matrix service to calculate the duration of the
       // routes between all our markers, and the destination address entered
       // by the user. Then put all the origins into an origin matrix.
@@ -503,7 +552,7 @@ let styledMapType = new window.google.maps.StyledMapType(
     // of the markers within the calculated distance. This will display the route
     // on the map.
     function displayDirections(origin) {
-      hideListings()
+      hideMarkers()
       let directionsService = new window.google.maps.DirectionsService()
       // Get the destination address from the user entered value.
       let destinationAddress =
@@ -560,7 +609,66 @@ let styledMapType = new window.google.maps.StyledMapType(
       })
     }
 
-
+// This function fires when the user selects a searchbox picklist item.
+ // It will do a nearby search using the selected query string or place.
+ function searchBoxPlaces(searchBox) {
+   hideMarkers(placeMarkers);
+   let places = searchBox.getPlaces();
+   // For each place, get the icon, name and location.
+   createMarkersForPlaces(places);
+   if (places.length == 0) {
+     window.alert('We did not find any places matching that search!');
+   }
+ }
+ // This function firest when the user select "go" on the places search.
+ // It will do a nearby search using the entered query string or place.
+ function textSearchPlaces() {
+   let bounds = map.getBounds()
+   hideMarkers(placeMarkers)
+   let placesService = new window.google.maps.places.PlacesService(map)
+   placesService.textSearch({
+     query: document.getElementById('places-search').value,
+     bounds: bounds
+   }, function(results, status) {
+     if (status === window.google.maps.places.PlacesServiceStatus.OK) {
+       createMarkersForPlaces(results)
+     }
+   })
+ }
+ // This function creates markers for each place found in either places search.
+ function createMarkersForPlaces(places) {
+   let bounds = new window.google.maps.LatLngBounds()
+   for (let i = 0; i < places.length; i++) {
+     let place = places[i]
+     let icon = {
+       url: place.icon,
+       size: new window.google.maps.Size(35, 35),
+       origin: new window.google.maps.Point(0, 0),
+       anchor: new window.google.maps.Point(15, 34),
+       scaledSize: new window.google.maps.Size(25, 25)
+     }
+     // Create a marker for each place.
+     let marker = new window.google.maps.Marker({
+       map: map,
+       icon: icon,
+       title: place.name,
+       position: place.geometry.location,
+       id: place.id
+     })
+     // // If a marker is clicked, do a place details search on it in the next function.
+     // marker.addListener('click', function() {
+     // getPlacesDetails(this, place)
+     // })
+     placeMarkers.push(marker)
+     if (place.geometry.viewport) {
+       // Only geocodes have viewport.
+       bounds.union(place.geometry.viewport)
+     } else {
+       bounds.extend(place.geometry.location)
+     }
+   }
+   map.fitBounds(bounds);
+ }
 
   // This function will go through each of the results, and,
   // if the distance is LESS than the value in the picker, show it on the map.
@@ -623,7 +731,7 @@ export default class App extends Component {
      const script = document.createElement('script')
      script.async = true
      script.defer = true
-     script.src = "https://maps.googleapis.com/maps/api/js?libraries=drawing,geometry&key=AIzaSyAWiSZ2beXFrSFWzZVRgF122wCkVf4P67Y&v=3.32&callback=initMap"
+     script.src = "https://maps.googleapis.com/maps/api/js?libraries=places,drawing,geometry&key=AIzaSyAWiSZ2beXFrSFWzZVRgF122wCkVf4P67Y&v=3.32&callback=initMap"
      document.head.appendChild(script)
   }
 
@@ -639,8 +747,15 @@ export default class App extends Component {
             <input id="toggle-search" className="btn" type="button" value="Search"/>
             <input id="toggle-distance" className="btn" type="button" value="Calculate"/>
             <hr />
+            <span id="area-search-title" className="text">Search for an area or city </span>
             <input id="focus-on-area-text" type="text" placeholder="Enter search area"/>
             <input id="focus-on-area" className="btn" type="button" value="Find"/>
+
+            <div id="space">
+            <span id="places-search-title" className="text">Search for nearby places </span>
+            <input id="places-search" type="text" placeholder="Ex: local brewery" />
+            <input id="go-places" className="btn" type="button" value="Find" />
+            </div>
 
             <div id="calulatedDistance">
             <span className="text"> Within </span>
