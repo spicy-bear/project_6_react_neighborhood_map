@@ -90,23 +90,24 @@ html, body {
     position: relative;
     margin-left: 10px;
     }
-#focus-on-area-text, #places-search {
+#focus-on-area-text, #places-search, #filter-markers-search {
   position: relative;
   width: 30%;
   height: 22px;
   display:none;
+  text-align: left;
 }
-#places-search-title, #area-search-title {
+#places-search-title, #area-search-title, #filter-markers-title {
   display:none;
   min-width: 160px;
   max-width: 160px;
 }
-#focus-on-area, #go-places {
+#focus-on-area, #go-places, #filtermarkers {
   width: 24%;
   margin-left: 10px;
   display:none;
 }
-#space {
+#space, #filterMarkersdiv {
   margin-top:8px;
 }
 #toggle-distance{
@@ -138,6 +139,7 @@ html, body {
     height: 20px;
     width: 20px;
 }
+
 
 
 /*default create-react-app css*/

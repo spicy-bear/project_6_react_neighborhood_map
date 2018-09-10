@@ -412,6 +412,28 @@ let styledMapType = new window.google.maps.StyledMapType(
         } else {
             areaSearch.style.display = "none"
         }
+
+//filter
+    let filterMarkersTitle = document.getElementById("filter-markers-title")
+        if (filterMarkersTitle.style.display === "none") {
+            filterMarkersTitle.style.display = "inline-block"
+        } else {
+            filterMarkersTitle.style.display = "none"
+        }
+    let filterMarkersSearch = document.getElementById("filter-markers-search")
+        if (filterMarkersSearch.style.display === "none") {
+            filterMarkersSearch.style.display = "inline-block"
+        } else {
+            filterMarkersSearch.style.display = "none"
+        }
+    let filterMarkersButton = document.getElementById("filtermarkers")
+        if (filterMarkersButton.style.display === "none") {
+            filterMarkersButton.style.display = "inline-block"
+        } else {
+            filterMarkersButton.style.display = "none"
+        }
+
+
   }
 
   //This shows and hides (respectively) the search options.
@@ -620,7 +642,7 @@ let styledMapType = new window.google.maps.StyledMapType(
      window.alert('We did not find any places matching that search! Try a bigger area or a different city');
    }
  }
- // This function firest when the user select "go" on the places search.
+ // This function firest when the user select "find" on the places search.
  // It will do a nearby search using the entered query string or place.
  function textSearchPlaces() {
    let bounds = map.getBounds()
@@ -776,6 +798,15 @@ function getPlacesDetails(marker, infowindow) {
     }
   }
 
+// This function searchs and filters through all markers
+function filterObjects() {
+
+  for (let i = 0; i < markers.length; i++) {
+    markers[i].setMap(null)
+  }
+
+}
+
 export default class App extends Component {
   constructor(props) {
       super(props)
@@ -806,13 +837,19 @@ export default class App extends Component {
             <hr />
             <span id="area-search-title" className="text">Search for an area or city </span>
             <input id="focus-on-area-text" type="text" placeholder="Enter search area"/>
-            <input id="focus-on-area" className="btn" type="button" value="Find"/>
+            <input id="focus-on-area" className="btn" type="button" value="Search"/>
 
             <div id="space">
             <span id="places-search-title" className="text">Search for nearby places </span>
             <input id="places-search" type="text" placeholder="Ex: local brewery" />
             <input id="go-places" className="btn" type="button" value="Find" />
             </div>
+
+          <div id="filterMarkersdiv">
+          <span id="filter-markers-title" className="text">Filter visible markers </span>
+          <input id="filter-markers-search" type="text" placeholder="lyons Classic Pinball" />
+          <input id="filtermarkers" className="btn" type="button" value="Filter" />
+          </div>
 
             <div id="calulatedDistance">
             <span className="text"> Within </span>
