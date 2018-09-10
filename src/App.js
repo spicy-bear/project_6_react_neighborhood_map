@@ -617,7 +617,7 @@ let styledMapType = new window.google.maps.StyledMapType(
    // For each place, get the icon, name and location.
    createMarkersForPlaces(places);
    if (places.length == 0) {
-     window.alert('We did not find any places matching that search!');
+     window.alert('We did not find any places matching that search! Try a bigger area or a different city');
    }
  }
  // This function firest when the user select "go" on the places search.
@@ -653,7 +653,18 @@ let styledMapType = new window.google.maps.StyledMapType(
        icon: icon,
        title: place.name,
        position: place.geometry.location,
-       id: place.id
+       id: place.place_id
+     })
+     // Create a single infowindow to be used with the place details information
+     // so that only one is open at once.
+     var placeInfoWindow = new window.google.maps.InfoWindow()
+     // If a marker is clicked, do a place details search on it in the next function.
+     marker.addListener('click', function() {
+       if (placeInfoWindow.marker == this) {
+         console.log("This infowindow already is on this marker!")
+       } else {
+         getPlacesDetails(this, placeInfoWindow)
+       }
      })
      // // If a marker is clicked, do a place details search on it in the next function.
      // marker.addListener('click', function() {
@@ -667,8 +678,54 @@ let styledMapType = new window.google.maps.StyledMapType(
        bounds.extend(place.geometry.location)
      }
    }
-   map.fitBounds(bounds);
+   map.fitBounds(bounds)
  }
+
+// This is the PLACE DETAILS search - it's the most detailed so it's only
+// executed when a marker is selected, indicating the user wants more
+// details about that place.
+function getPlacesDetails(marker, infowindow) {
+ let service = new window.google.maps.places.PlacesService(map)
+ service.getDetails({
+   placeId: marker.id
+ }, function(place, status) {
+   if (status === window.google.maps.places.PlacesServiceStatus.OK) {
+     // Set the marker property on this infowindow so it isn't created again.
+     infowindow.marker = marker;
+     let innerHTML = '<div>';
+     if (place.name) {
+       innerHTML += '<strong>' + place.name + '</strong>'
+     }
+     if (place.formatted_address) {
+       innerHTML += '<br>' + place.formatted_address
+     }
+     if (place.formatted_phone_number) {
+       innerHTML += '<br>' + place.formatted_phone_number
+     }
+     if (place.opening_hours) {
+       innerHTML += '<br><br><strong>Hours:</strong><br>' +
+           place.opening_hours.weekday_text[0] + '<br>' +
+           place.opening_hours.weekday_text[1] + '<br>' +
+           place.opening_hours.weekday_text[2] + '<br>' +
+           place.opening_hours.weekday_text[3] + '<br>' +
+           place.opening_hours.weekday_text[4] + '<br>' +
+           place.opening_hours.weekday_text[5] + '<br>' +
+           place.opening_hours.weekday_text[6];
+     }
+     if (place.photos) {
+       innerHTML += '<br><br><img src="' + place.photos[0].getUrl(
+           {maxHeight: 100, maxWidth: 200}) + '">'
+     }
+     innerHTML += '</div>'
+     infowindow.setContent(innerHTML)
+     infowindow.open(map, marker)
+     // Make sure the marker property is cleared if the infowindow is closed.
+     infowindow.addListener('closeclick', function() {
+       infowindow.marker = null
+     })
+   }
+ })
+}
 
   // This function will go through each of the results, and,
   // if the distance is LESS than the value in the picker, show it on the map.
