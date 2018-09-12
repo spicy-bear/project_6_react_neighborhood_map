@@ -17,6 +17,7 @@
 .env.production.local
 
 misc.js
+Removed.js
 
 npm-debug.log*
 yarn-debug.log*

@@ -1,0 +1,42 @@
+[
+  {
+    "title": "Lyons Classic Pinball",
+    "location":
+      {
+        "lat": 40.224428,
+        "lng": -105.268916
+      }
+  },
+  {
+    "title": "Planet Bluegrass",
+      "location":
+        {
+          "lat": 40.2269,
+          "lng": -105.2733
+        }
+  },
+  {
+    "title": "The Stone Cup",
+    "location":
+      {
+        "lat": 40.2245,
+        "lng": -105.2706
+      }
+  },
+  {
+  "title": "The Quarry Self-Serve Watering Hole",
+  "location":
+    {
+      "lat": 40.2227,
+      "lng": -105.2650
+    }
+  },
+  {
+    "title": "Oskar Blues Grill & Brew",
+    "location":
+      {
+        "lat": 40.224421,
+        "lng": -105.268529
+      }
+  }
+]
