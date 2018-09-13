@@ -1,7 +1,5 @@
 import React, { Component } from 'react'
-// import { Map, InfoWindow, Marker, GoogleApiWrapper, Map } from 'google-maps-react'
-//import { withGoogleMap, GoogleMap, Marker } from "react-google-maps"
-// import scriptLoader from 'react-async-script-loader'
+
 import Search from './components/Search.js'
 import './App.css'
 
@@ -13,11 +11,11 @@ export default class App extends Component {
   constructor(props) {
       super(props)
       this.state = {
-        //locations: require('./utilities/locations.json')
       }
   }
 
   componentDidMount () {
+    //after moving initMap function into the component, had to bind this
     window.initMap = this.initMap.bind(this)
     try {
       const script = document.createElement('script')
@@ -65,17 +63,17 @@ export default class App extends Component {
       scale: .06
   }
 
-    // Create a "highlighted location" marker color for when the user
-    // mouses over the marker.
-    let highlightedIcon =  {
-      anchor: new window.google.maps.Point(172.268,501.67),
-      path: 'M 172.268,501.67 C 26.97,291.031 0,269.413 0,192 0,85.961 85.961,0 192,0 c 106.039,0 192,85.961 192,192 0,77.413 -26.97,99.031 -172.268,309.67 -9.535,13.774 -29.93,13.773 -39.464,0 z',
-        fillColor: '#ffffff',
-        fillOpacity: 1,
-        strokeColor: '#000',
-        strokeWeight: 2,
-        scale: .06
-    }
+  // Create a "highlighted location" marker color for when the user
+  // mouses over the marker.
+  let highlightedIcon =  {
+    anchor: new window.google.maps.Point(172.268,501.67),
+    path: 'M 172.268,501.67 C 26.97,291.031 0,269.413 0,192 0,85.961 85.961,0 192,0 c 106.039,0 192,85.961 192,192 0,77.413 -26.97,99.031 -172.268,309.67 -9.535,13.774 -29.93,13.773 -39.464,0 z',
+      fillColor: '#ffffff',
+      fillOpacity: 1,
+      strokeColor: '#000',
+      strokeWeight: 2,
+      scale: .06
+  }
     for (let i = 0; i < locations.length; i++) {
       // Get the position from the location array.
       let position = locations[i].location
@@ -89,7 +87,6 @@ export default class App extends Component {
         id: i,
         icon: defaultIcon
       })
-
       markers.push(marker)
       marker.addListener('mouseover', function() {
         this.setIcon(highlightedIcon)
@@ -97,16 +94,13 @@ export default class App extends Component {
       marker.addListener('mouseout', function() {
         this.setIcon(defaultIcon)
       })
-
       this.setState({
-        'locations': locations
+        'locations': locations,
+        'markers': markers,
       })
-
     }
-
     this.showListings()
   }
-
 
     // This function will loop through the markers array and display them all.
      showListings() {
@@ -125,18 +119,18 @@ export default class App extends Component {
       }
     }
 
-
-
   render() {
-    const {  markers, locations, marker, filteredMarkers } = this.state
+    const {  markers, locations, marker } = this.state
     return (
     <div>
+      <Search
+        locations={ locations }
+        markers={ markers }
+        marker={ marker }
+      />
       <div id="map" />
     </div>
     )
   }
-}
 
-// export default scriptLoader(
-//   ['https://maps.googleapis.com/maps/api/js?libraries=places,drawing,geometry&key=AIzaSyAWiSZ2beXFrSFWzZVRgF122wCkVf4P67Y&v=3.32&callback=initMap']
-// )(App)
+}
