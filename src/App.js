@@ -6,17 +6,19 @@ import Search from './components/Search.js'
 import './App.css'
 
 let map
+let locations
+let markers = []
 
 export default class App extends Component {
   constructor(props) {
       super(props)
       this.state = {
-        locations: require('./utilities/locations.json')
+        //locations: require('./utilities/locations.json')
       }
   }
 
   componentDidMount () {
-    window.initMap = this.initMap
+    window.initMap = this.initMap.bind(this)
     try {
       const script = document.createElement('script')
       script.defer = true
@@ -44,7 +46,86 @@ export default class App extends Component {
     map.mapTypes.set('styled_map', styledMapType)
     map.setMapTypeId('styled_map')
     console.log('Map initialized')
+
+    this.setState({
+      'map': map,
+      'locations': locations
+    })
+
+  let locations = require('./utilities/locations.json')
+
+  let largeInfowindow = new window.google.maps.InfoWindow()
+  let defaultIcon = {
+    anchor: new window.google.maps.Point(172.268, 501.67),
+    path: 'M 172.268,501.67 C 26.97,291.031 0,269.413 0,192 0,85.961 85.961,0 192,0 c 106.039,0 192,85.961 192,192 0,77.413 -26.97,99.031 -172.268,309.67 -9.535,13.774 -29.93,13.773 -39.464,0 z',
+      fillColor: '#000000',
+      fillOpacity: 1,
+      strokeColor: '#000',
+      strokeWeight: 2,
+      scale: .06
   }
+
+    // Create a "highlighted location" marker color for when the user
+    // mouses over the marker.
+    let highlightedIcon =  {
+      anchor: new window.google.maps.Point(172.268,501.67),
+      path: 'M 172.268,501.67 C 26.97,291.031 0,269.413 0,192 0,85.961 85.961,0 192,0 c 106.039,0 192,85.961 192,192 0,77.413 -26.97,99.031 -172.268,309.67 -9.535,13.774 -29.93,13.773 -39.464,0 z',
+        fillColor: '#ffffff',
+        fillOpacity: 1,
+        strokeColor: '#000',
+        strokeWeight: 2,
+        scale: .06
+    }
+    for (let i = 0; i < locations.length; i++) {
+      // Get the position from the location array.
+      let position = locations[i].location
+      let title = locations[i].title
+      // Create a marker per location, and put into markers array.
+      let marker = new window.google.maps.Marker({
+        position: position,
+        title: title,
+        draggable: false,
+        animation: window.google.maps.Animation.DROP,
+        id: i,
+        icon: defaultIcon
+      })
+
+      markers.push(marker)
+      marker.addListener('mouseover', function() {
+        this.setIcon(highlightedIcon)
+      })
+      marker.addListener('mouseout', function() {
+        this.setIcon(defaultIcon)
+      })
+
+      this.setState({
+        'locations': locations
+      })
+
+    }
+
+    this.showListings()
+  }
+
+
+    // This function will loop through the markers array and display them all.
+     showListings() {
+      let bounds = new window.google.maps.LatLngBounds()
+      // Extend the boundaries of the map for each marker and display the marker
+      for (let i = 0; i < markers.length; i++) {
+        markers[i].setMap(map)
+        bounds.extend(markers[i].position)
+      }
+      map.fitBounds(bounds)
+    }
+    // This function will loop through the listings and hide them all.
+     hideMarkers(markers) {
+      for (let i = 0; i < markers.length; i++) {
+        markers[i].setMap(null)
+      }
+    }
+
+
 
   render() {
     const {  markers, locations, marker, filteredMarkers } = this.state
