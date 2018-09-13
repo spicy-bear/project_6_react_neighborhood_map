@@ -1,20 +1,19 @@
 import React, { Component } from 'react'
+// import { Map, InfoWindow, Marker, GoogleApiWrapper, Map } from 'google-maps-react'
+//import { withGoogleMap, GoogleMap, Marker } from "react-google-maps"
+import scriptLoader from 'react-async-script-loader'
 import Search from './components/Search.js'
-import Filter from './components/Filter.js'
 import './App.css'
 
 let map
 let markers = []
-let polygon = null
-let placeMarkers = []
 let query = ''
 let filterValue = null
 let locations = []
 let marker
 
 window.initMap = function() {
-let styledMapType = new window.google.maps.StyledMapType(require('./utilities/map.json'),{name: 'Styled Map'}
-)
+let styledMapType = new window.google.maps.StyledMapType(require('./utilities/map.json'),{name: 'Styled Map'})
 
   map = new window.google.maps.Map(document.getElementById('map'), {
     center: {lat: 40.2244, lng: -105.2689},
@@ -67,9 +66,9 @@ let styledMapType = new window.google.maps.StyledMapType(require('./utilities/ma
       // Push the marker to our array of markers.
       markers.push(marker)
       // Create an onclick event to open an infowindow at each marker.
-      marker.addListener('click', function() {
-        populateInfoWindow(this, largeInfowindow)
-      })
+      // marker.addListener('click', function() {
+      //   populateInfoWindow(this, largeInfowindow)
+      // })
       // Two event listeners - one for mouseover, one for mouseout,
       // to change the colors back and forth.
       marker.addListener('mouseover', function() {
@@ -82,55 +81,6 @@ let styledMapType = new window.google.maps.StyledMapType(require('./utilities/ma
 
     showListings()
 
-  }
-
-  // This function populates the infowindow when the marker is clicked. We'll only allow
-  // one infowindow which will open at the marker that is clicked, and populate based
-  // on that markers position.
-  function populateInfoWindow(marker, infowindow) {
-    // Check to make sure the infowindow is not already opened on this marker.
-    if (infowindow.marker !== marker) {
-      infowindow.setContent('')
-      infowindow.marker = marker
-      infowindow.open(map, marker)
-      // Make sure the marker property is cleared if the infowindow is closed.
-      infowindow.addListener('closeclick',function(){
-        infowindow.setMarker = null
-      })
-    let streetViewService = new window.google.maps.StreetViewService()
-    let radius = 50
-    // In case the status is OK, which means the pano was found, compute the
-    // position of the streetview image, then calculate the heading, then get a
-    // panorama from that and set the options
-    function getStreetView(data, status) {
-      if (status === window.google.maps.StreetViewStatus.OK) {
-        let nearStreetViewLocation = data.location.latLng
-        let heading = window.google.maps.geometry.spherical.computeHeading(
-          nearStreetViewLocation, marker.position)
-          infowindow.setContent('<div>' + marker.title + '</div><div id="panorama"></div>')
-          let panoramaOptions = {
-            position: nearStreetViewLocation,
-            pov: {
-              heading: heading,
-              pitch: 30
-            }
-          }
-        let panorama = new window.google.maps.StreetViewPanorama(
-          document.getElementById('panorama'), panoramaOptions)
-      } else if (status === window.google.maps.StreetViewStatus.UNKNOWN_ERROR) {
-        window.alert('Streetview Unknown Error, try another search')
-        }
-      else {
-        infowindow.setContent('<div>' + marker.title + '</div>' +
-          '<div>No Street View Found</div>')
-      }
-      }
-      // Use streetview service to get the closest streetview image within
-      // 50 meters of the markers position
-      streetViewService.getPanoramaByLocation(marker.position, radius, getStreetView)
-      // Open the infowindow on the correct marker.
-      infowindow.open(map, marker)
-    }
   }
 
 // This function will loop through the markers array and display them all.
@@ -150,38 +100,55 @@ let styledMapType = new window.google.maps.StyledMapType(require('./utilities/ma
     }
   }
 
-export default class App extends Component {
+export class App extends Component {
   constructor(props) {
       super(props)
       this.state = {
         map: {},
-        locations,
-        markers
+        markers: markers
       }
   }
-  async componentDidMount () {
-     try {
-      const script = document.createElement('script')
-      script.defer = true
-       script.src = "https://maps.googleapis.com/maps/api/js?libraries=places,drawing,geometry&key=AIzaSyAWiSZ2beXFrSFWzZVRgF122wCkVf4P67Y&v=3.32&callback=initMap"
-      document.head.appendChild(script)
-      this.setState({})
-      }
-      catch (error) {
-        window.alert(error, 'Google maps not loaded, try again')
-      }
-    }
+
+  // componentDidUpdate(prevProps, prevState) {
+  //     if (prevProps.google !== this.props.google) {
+  //       this.initMap()
+  //     }
+  // }
+  componentDidMount () {
+  //   try {
+  //     const script = document.createElement('script')
+  //     script.defer = true
+  //     script.async = true
+  //     script.src = "https://maps.googleapis.com/maps/api/js?libraries=places,drawing,geometry&key=AIzaSyAWiSZ2beXFrSFWzZVRgF122wCkVf4P67Y&v=3.32&callback=initMap"
+  //     document.head.appendChild(script)
+  //     this.setState({
+  //       markers: markers,
+  //       map: {}
+  //     })
+  //   }
+  //   catch (error) {
+  //   console.log(this.state)
+  //   this.setState(() => {throw error})
+  //   window.alert(error, 'Google maps not loaded, try again')
+  //   }
+  }
+
   render() {
-    const { locations, markers } = this.state
+    const {  markers, locations, marker } = this.state
     return (
     <div>
-      <Filter
+
+      <Search
         locations={ locations }
-        marker={ marker }
         markers={ markers }
+        marker={ marker }
       />
-      <div id="map" />
+    <div id="map" />
     </div>
     )
   }
 }
+
+export default scriptLoader(
+  ['https://maps.googleapis.com/maps/api/js?libraries=places,drawing,geometry&key=AIzaSyAWiSZ2beXFrSFWzZVRgF122wCkVf4P67Y&v=3.32&callback=initMap']
+)(App)

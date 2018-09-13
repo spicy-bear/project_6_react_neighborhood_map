@@ -1,42 +1,41 @@
 import React, { Component } from 'react'
+import '../App.css'
+
 
 export default class Search extends Component {
   constructor(props) {
     super(props)
       this.state = {
-        filterLocations: ''
+      //  markers: this.props.markers
       }
   }
 
   render() {
-    const { locations } = this.state
-    const { marker, markers } = this.props
-    function filterMarkers() {
-      this.setState({filterLocations: locations})
-      {console.log(this.props, this.state)}
+    const { markers, locations } = this.props
 
-    }
     return (
     <div>
       <input
-        id="filterMarkers"
+        id="filterMarkersSearch"
         type="text"
         placeholder="Filter"
         onChange={this.filterMarkers}
-        markers={markers}
-        marker={marker}
       />
 
-      <div id="filterMenu">
+      <div id="filterList">
         <ol>
-          <li>
+
+        { markers && markers.map(marker =>
+          <li key={marker.id}>
             <input
-              id={locations}
-              className="filter"
+              id="filterMarker"
+              className="btn"
               type="button"
-              value={locations}
+              value={marker.title}
             />
           </li>
+          )}
+
         </ol>
       </div>
     </div>

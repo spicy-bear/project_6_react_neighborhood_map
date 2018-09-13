@@ -13,24 +13,6 @@ html, body {
   height: 100%;
   position: absolute;
 }
-.container {
-   height: 100%;
-   position: relative;
-}
-#hide-listings, #show-listings {
-  width: 48%;
-}
-.options-box {
-   background: #fff;
-   border: 1px solid #999;
-   border-radius: 2px;
-   height: 100%;
-   line-height: 10px;
-   padding: 10px 10px 10px 10px;
-   text-align: left;
-   width: 100%;
-   position: relative;
-}
 
 .btn {
   margin: 0 0 0 0;
@@ -44,8 +26,8 @@ html, body {
 	text-align: center;
 	height: 30px;
 	line-height: 30px;
-	min-width: 50px;
-  max-width: 100px;
+	/* min-width: 50px;
+  max-width: 100px; */
 	padding: 0 0px;
 	text-decoration: none;
   direction: ltr;
@@ -57,6 +39,7 @@ html, body {
   background-clip: padding-box;
   box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px;
   font-weight: 500;
+margin: 0 0 0 0;
   }
 
 .btn:focus {
@@ -75,7 +58,7 @@ html, body {
 	-moz-box-shadow: 0px 1px 1px rgba(0,0,0,.1);
 	box-shadow: 0px 1px 1px rgba(0,0,0,.1);
 }
-
+/*
 #panorama {
   width: 200px;
   height: 200px;
@@ -90,55 +73,53 @@ html, body {
     position: relative;
     margin-left: 10px;
     }
-#focus-on-area-text, #places-search, #filter-markers-search {
-  position: relative;
-  width: 30%;
-  height: 22px;
-  display:none;
-  text-align: left;
-}
-#places-search-title, #area-search-title, #filter-markers-title {
-  display:none;
-  min-width: 160px;
-  max-width: 160px;
-}
-#focus-on-area, #go-places, #filtermarkers {
-  width: 24%;
-  margin-left: 10px;
-  display:none;
-}
-#space, #filterMarkersdiv {
-  margin-top:8px;
-}
-#toggle-distance{
-  width: 27%;
-  position: relative;
-  margin-left: 10px;
-}
-#calulatedDistance{
-  padding-top:1%;
-  display:none;
-  min-width:100%;
-  max-width:100%;
-}
-#search-within-time {
-  width: 24%;
-  margin-left: 10px;
-}
-#search-within-time-text {
-  width: 30%;
-  position: relative;
-  height: 22px;
-}
+
 .text, label {
   font-size: 12px;
   text-align: center;
   cursor: default;
+} */
+
+
+ol, li, ul {
+  text-decoration: none;
+  list-style: none;
+  margin: 0 0 0 0;
+  padding: 0;
+
 }
-#highwaysCheckboxId, #tollsCheckboxId, #ferriesCheckboxId {
-    height: 20px;
-    width: 20px;
+#filterMarkersSearch {
+  position: absolute;
+  z-index: 1;
+  height: 22px;
+  display: inline-block;
+  text-align: left;
+  min-width: 200px;
+  max-width: 200px;
+  margin: 60px 0px 0px 10px;
 }
+
+#filterList{
+  position: absolute;
+  z-index: 1;
+  top: 92px;
+  text-align: left;
+  /* min-width: 180px;
+  max-width: 180px; */
+}
+
+#filterMarker {
+  display: inline-block;
+  margin: 0px 0 0 10px;
+  padding-left: 2px;
+  text-align: left;
+  min-width: 200px;
+  max-width: 200px;
+}
+
+
+
+
 
 
 

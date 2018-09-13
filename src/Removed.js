@@ -9,11 +9,103 @@ document.getElementById('show-listings').addEventListener('click', showListings)
 
 
 
+  // filterMarkers(event) {
+  //   var locations = []
+  //   this.location.forEach(function(location){
+  //     if (location.length >= 0) {
+  //       location.marker.setVisible(true)
+  //       location.markers.push(location)
+  //     }
+  //     else {
+  //       location.markers.setVisible(false)
+  //     }
+  //   })
+  //
+  //   this.setState({
+  //     query: event.target.value,
+  //     locations: locations
+  //   })
+  // }
 
 
+  //   try {
+  //   const response = await fetch(`https://maps.googleapis.com/maps/api/js?libraries=places,drawing,geometry&key=AIzaSyAWiSZ2beXFrSFWzZVRgF122wCkVf4P67Y&v=3.32&callback=initMap`)
+  //   if (!response.OK) {
+  //     throw Error(response.statusText);
+  //   }
+  //   const json = await response.json();
+  //   this.setState({ locations, map, markers });
+  // } catch (error) {
+  //   console.log(error);
+  // }
+
+  //    try {
+  //     const script = document.createElement('script')
+  //     script.defer = true
+  //     script.await = true
+  //     script.src = "https://maps.googleapis.com/maps/api/js?libraries=places,drawing,geometry&key=AIzaSyAWiSZ2beXFrSFWzZVRgF122wCkVf4P67Y&v=3.32&callback=initMap"
+  //     document.head.appendChild(script)
+  //     this.setState({
+  //       locations: locations,
+  //       markers: markers,
+  //       map: {}
+  //     })
+  // console.log(this.state.locations)
+  //     }
+  //     // if (this.state === undefined) {
+  //     //   window.alert('undefined')
+  //     // } else {
+  //     //     console.log(this.state)
+  //     // }
+  //     catch (error) {
+  //     console.log(this.state)
+  //       window.alert(error, 'Google maps not loaded, try again')
+  //     }
 
 
+    // componentWillReceiveProps ({ isScriptLoaded, isScriptLoadSucceed }) {
+    //     if (isScriptLoaded && !this.props.isScriptLoaded) {
+    //       // load finished
+    //       if (isScriptLoadSucceed) {
+    //         window.initMap()
+    //       }
+    //       else {
+    //         this.props.onError(),
+    //         window.alert('Google maps not loaded, try again')
+    //       }
+    //     }
+    //   }
+    //
+    // async componentDidMount () {
+    //   const { isScriptLoaded, isScriptLoadSucceed } = this.props
+    //   if (isScriptLoaded && isScriptLoadSucceed) {
+    //     window.initMap()
+    //   }
+    // }
+  // async componentWillMount() {
+  //   try {
+  //     const script = document.createElement('script')
+  //     script.defer = true
+  //     //script.await = true
+  //     script.src = "https://maps.googleapis.com/maps/api/js?libraries=places,drawing,geometry&key=AIzaSyAWiSZ2beXFrSFWzZVRgF122wCkVf4P67&v=3.32&callback=initMap"
+  //     //removed last key, Y
+  //     document.head.appendChild(script)
+  //     this.setState({
+  //       markers: markers,
+  //       map: {}
+  //     })
+  //   }
+  //   catch (error) {
+  //   console.log(this.state)
+  //   this.setState(() => {throw error})
+  //   window.alert(error, 'Google maps not loaded, try again')
+  //   }
+  //
+  // }
 
+
+let polygon = null
+let placeMarkers = []
 
 
 
@@ -818,3 +910,96 @@ function getPlacesDetails(marker, infowindow) {
     </li>
   </ol>
 </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/////css
+.container {
+   height: 100%;
+   position: relative;
+}
+#hide-listings, #show-listings {
+  width: 48%;
+}
+.options-box {
+   background: #fff;
+   border: 1px solid #999;
+   border-radius: 2px;
+   height: 100%;
+   line-height: 10px;
+   padding: 10px 10px 10px 10px;
+   text-align: left;
+   width: 100%;
+   position: relative;
+}
+#focus-on-area-text, #places-search, #filter-markers-search {
+  position: relative;
+  width: 30%;
+  height: 22px;
+  display:none;
+  text-align: left;
+}
+#places-search-title, #area-search-title, #filter-markers-title {
+  display:none;
+  min-width: 160px;
+  max-width: 160px;
+}
+#focus-on-area, #go-places {
+  width: 24%;
+  margin-left: 10px;
+  display:none;
+}
+#space, #filterMarkersdiv {
+  margin-top:8px;
+}
+#toggle-distance{
+  width: 27%;
+  position: relative;
+  margin-left: 10px;
+}
+#calulatedDistance{
+  padding-top:1%;
+  display:none;
+  min-width:100%;
+  max-width:100%;
+}
+#search-within-time {
+  width: 24%;
+  margin-left: 10px;
+}
+#search-within-time-text {
+  width: 30%;
+  position: relative;
+  height: 22px;
+}
+
+#highwaysCheckboxId, #tollsCheckboxId, #ferriesCheckboxId {
+    height: 20px;
+    width: 20px;
+}

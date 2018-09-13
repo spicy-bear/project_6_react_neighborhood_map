@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import Search from './Search.js'
+import '../App.css'
 
 export default class Filter extends Component {
   constructor(props) {
