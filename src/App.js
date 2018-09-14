@@ -1,22 +1,26 @@
 import React, { Component } from 'react'
-
-import Search from './components/Search.js'
+//import Search from './components/Search.js'
 import './App.css'
 
 let map
 let locations
 let markers = []
+//let query
 
 export default class App extends Component {
   constructor(props) {
       super(props)
+      window.initMap = this.initMap.bind(this)
       this.state = {
-      }
+      locations: locations,
+      map: {},
+      //infoWindow: ''
+    }
   }
 
   componentDidMount () {
+    console.log('Component mounted and script loaded')
     //after moving initMap function into the component, had to bind this
-    window.initMap = this.initMap.bind(this)
     try {
       const script = document.createElement('script')
       script.defer = true
@@ -43,16 +47,23 @@ export default class App extends Component {
     })
     map.mapTypes.set('styled_map', styledMapType)
     map.setMapTypeId('styled_map')
+
+    let infoWindow = new window.google.maps.InfoWindow({})
+
+    // window.google.maps.event.addListener(infoWindow, 'click', function() {
+    //   this.infowindow.close()
+    // })
+
     console.log('Map initialized')
 
     this.setState({
       'map': map,
-      'locations': locations
+      //'locations': locations,
+      'infoWindow': infoWindow
     })
 
-  let locations = require('./utilities/locations.json')
-
   let largeInfowindow = new window.google.maps.InfoWindow()
+
   let defaultIcon = {
     anchor: new window.google.maps.Point(172.268, 501.67),
     path: 'M 172.268,501.67 C 26.97,291.031 0,269.413 0,192 0,85.961 85.961,0 192,0 c 106.039,0 192,85.961 192,192 0,77.413 -26.97,99.031 -172.268,309.67 -9.535,13.774 -29.93,13.773 -39.464,0 z',
@@ -74,32 +85,128 @@ export default class App extends Component {
       strokeWeight: 2,
       scale: .06
   }
-    for (let i = 0; i < locations.length; i++) {
-      // Get the position from the location array.
-      let position = locations[i].location
-      let title = locations[i].title
-      // Create a marker per location, and put into markers array.
-      let marker = new window.google.maps.Marker({
-        position: position,
-        title: title,
-        draggable: false,
-        animation: window.google.maps.Animation.DROP,
-        id: i,
-        icon: defaultIcon
-      })
-      markers.push(marker)
-      marker.addListener('mouseover', function() {
-        this.setIcon(highlightedIcon)
-      })
-      marker.addListener('mouseout', function() {
-        this.setIcon(defaultIcon)
-      })
-      this.setState({
+
+  let locations = require('./utilities/locations.json')
+  locations.forEach(location => {
+    let title = location.title
+    let position = location.location
+    console.log('Location', title, 'loaded')
+
+    let marker = new window.google.maps.Marker({
+      position: position,
+      title: title,
+      draggable: false,
+      animation: window.google.maps.Animation.DROP,
+      id: title+position,
+      icon: defaultIcon,
+      map: map
+    })
+
+    markers.push(marker)
+    //Create an onclick event to open an infowindow at each marker.
+    marker.addListener('click', function() {
+      populateInfoWindow(this, largeInfowindow)
+    })
+    marker.addListener('mouseover', function() {
+      this.setIcon(highlightedIcon)
+    })
+    marker.addListener('mouseout', function() {
+      this.setIcon(defaultIcon)
+    })
+    this.setState({
         'locations': locations,
         'markers': markers,
+        'map': map
       })
-    }
+    let clientID = 'REFU10YE0NIIQBQIMCOM21L5BYLT40CXHKS5AALXYPW3OPBQ'
+    let clientSecret = 'RZCUWYLNDIXBG5SUFE5XSNWVVNZOHPEGZELRZP1ELYGLV1HC'
+    fetch('https://api.foursquare.com/v2/venues/explore?client_id='+ clientID + '&client_secret='+ clientSecret + '&v=20180323&limit=1&ll='+ position.lat + ','+ position.lng)
+    .then(function() {
+      console.log('done')
+    })
+    .catch(function() {
+      console.log('error')
+    })
+
+  })
+  console.log('State updated to', this.state)
+
+    // for (let i = 0; i < locations.length; i++) {
+    //   // Get the position from the location array.
+    //   let position = locations[i].location
+    //   let title = locations[i].title
+    //   // Create a marker per location, and put into markers array.
+    //   let marker = new window.google.maps.Marker({
+    //     position: position,
+    //     title: title,
+    //     draggable: false,
+    //     animation: window.google.maps.Animation.DROP,
+    //     id: i,
+    //     icon: defaultIcon
+    //   })
+    //   markers.push(marker)
+    //   marker.addListener('mouseover', function() {
+    //     this.setIcon(highlightedIcon)
+    //   })
+    //   marker.addListener('mouseout', function() {
+    //     this.setIcon(defaultIcon)
+    //   })
+    //   this.setState({
+    //     'locations': locations,
+    //     'markers': markers,
+    //   })
+    // }
     this.showListings()
+
+
+    // This function populates the infowindow when the marker is clicked. We'll only allow
+    // one infowindow which will open at the marker that is clicked, and populate based
+    // on that markers position.
+     function populateInfoWindow(marker, infowindow) {
+      // Check to make sure the infowindow is not already opened on this marker.
+      if (infowindow.marker !== marker) {
+        infowindow.setContent('')
+        infowindow.marker = marker
+        infowindow.open(map, marker)
+        // Make sure the marker property is cleared if the infowindow is closed.
+        infowindow.addListener('closeclick',function(){
+          infowindow.setMarker = null
+        })
+      let streetViewService = new window.google.maps.StreetViewService();
+      let radius = 50;
+      // In case the status is OK, which means the pano was found, compute the
+      // position of the streetview image, then calculate the heading, then get a
+      // panorama from that and set the options
+      function getStreetView(data, status) {
+        if (status === window.google.maps.StreetViewStatus.OK) {
+          let nearStreetViewLocation = data.location.latLng
+          console.log('Street view returned status', status)
+          let heading = window.google.maps.geometry.spherical.computeHeading(
+            nearStreetViewLocation, marker.position)
+            infowindow.setContent('<div>' + marker.title + '</div><div id="panorama"></div>')
+            let panoramaOptions = {
+              position: nearStreetViewLocation,
+              pov: {
+                heading: heading,
+                pitch: 30
+              }
+            }
+          let panorama = new window.google.maps.StreetViewPanorama(
+            document.getElementById('panorama'), panoramaOptions)
+        } else {
+          infowindow.setContent('<div>' + marker.title + '</div>' +
+            '<div>No Street View Found</div>')
+        }
+        }
+        // Use streetview service to get the closest streetview image within
+        // 50 meters of the markers position
+        streetViewService.getPanoramaByLocation(marker.position, radius, getStreetView)
+        // Open the infowindow on the correct marker.
+        infowindow.open(map, marker)
+      }
+    }
+
+
   }
 
     // This function will loop through the markers array and display them all.
@@ -119,15 +226,29 @@ export default class App extends Component {
       }
     }
 
+  filterMarkers = (query) => {
+    //this.props.infowindow.close()
+    //const { value } = event.target.value
+    let filteredMarkers = []
+    const { locations, marker } = this.props
+    locations.forEach(location => {
+      if(location.title >= 0) {
+        this.showListings(marker)
+      } else {
+        this.props.hideMarkers(marker)
+      }
+    })
+    this.setState({
+        query: query.trim(),
+        filteredMarkers: filteredMarkers
+      })
+  }
+
+
   render() {
-    const {  markers, locations, marker } = this.state
+    //const {  markers, locations, marker, infoWindow } = this.state
     return (
     <div>
-      <Search
-        locations={ locations }
-        markers={ markers }
-        marker={ marker }
-      />
       <div id="map" />
     </div>
     )

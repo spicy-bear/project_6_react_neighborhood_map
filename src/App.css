@@ -26,16 +26,12 @@ html, body {
 	text-align: center;
 	height: 30px;
 	line-height: 30px;
-	/* min-width: 50px;
-  max-width: 100px; */
 	padding: 0 0px;
 	text-decoration: none;
   direction: ltr;
   overflow: hidden;
   position: relative;
   user-select: none;
-  /* border-bottom-left-radius: 2px;
-  border-top-left-radius: 2px; */
   background-clip: padding-box;
   box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px;
   font-weight: 500;
@@ -58,28 +54,12 @@ margin: 0 0 0 0;
 	-moz-box-shadow: 0px 1px 1px rgba(0,0,0,.1);
 	box-shadow: 0px 1px 1px rgba(0,0,0,.1);
 }
-/*
+
+
 #panorama {
   width: 200px;
   height: 200px;
 }
-#toggle-drawing {
-    width: 27%;
-    position: relative;
-    margin-left: 10px;
-  }
-  #toggle-search {
-    width: 27%;
-    position: relative;
-    margin-left: 10px;
-    }
-
-.text, label {
-  font-size: 12px;
-  text-align: center;
-  cursor: default;
-} */
-
 
 ol, li, ul {
   text-decoration: none;

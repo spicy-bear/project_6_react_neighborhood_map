@@ -1,44 +1,47 @@
 import React, { Component } from 'react'
 import '../App.css'
 
+let query
 
 export default class Search extends Component {
   constructor(props) {
     super(props)
       this.state = {
-        query: '',
-        // markers: this.props.markers,
-        // locations: this.props.locations
-        // filteredMarkers: this.props.markers,
+        query: ''
       }
   }
 
-  // filterMarkers = (filter) => {
-  //   //let filter =  event
-  //   let filteredMarkers = this.props.markers
-  //   if ( filter.length >= 0 ) {
-  //     {filter: filter.trim()}
-  //   }
-  //     // filteredMarkers.push(filter)
-  //     // filter => (this.setState({filteredMarkers: filter}))
-  //     // console.log(filteredMarkers)
-  //   this.props.markers.forEach(function(location) {
-  //     if (filteredMarkers.longname.indexOf(filter.toLowerCase()) >= 0) {
-  //       filteredMarkers.marker.setVisible(true)
-  //       filteredMarkers.push(filter)
-  //     } else {
-  //       filteredMarkers.marker.setVisible(false)
-  //     }
-  //   })
-  //   this.setState({
-  //     filteredMarkers: filteredMarkers,
-  //     filter: filter
-  //   })
-  // }
+  filterMarkers = (query) => {
+    //this.props.infowindow.close()
+    //const { value } = event.target.value
+    let filteredMarkers = []
+    const { locations, marker } = this.props
+    locations.forEach(location => {
+      if(location.title >= 0) {
+        this.showListings(marker)
+      } else {
+        this.props.hideMarkers(marker)
+      }
+    })
+    // this.props.locations.forEach((marker) => {
+    // console.log(marker)
+    // if(query.length >= 0) {
+    // this.hideMarkers()
+    //   this.props.markers.push(marker)
+    // } else {
+    //   this.showListings()
+    // }
+    this.setState({
+        query: query.trim(),
+        filteredMarkers: filteredMarkers
+      })
+  }
+
+
 
   render() {
-    //const { filteredMarkers } = this.state
     const { markers, locations, marker } = this.props
+
     return (
     <div>
       <input
@@ -46,7 +49,7 @@ export default class Search extends Component {
         type="text"
         placeholder="Filter"
         value={this.state.query}
-        //onChange={(event) => this.filterMarkers(event.target.value)}
+        onChange={(event) => this.filterMarkers(event.target.value).bind(this)}
       />
 
       <div id="filterList">
@@ -59,6 +62,7 @@ export default class Search extends Component {
               className="btn"
               type="button"
               value={marker.title}
+              //infowindow.open(map, markers[i])
             />
           </li>
           )}

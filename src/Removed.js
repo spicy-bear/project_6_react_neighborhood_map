@@ -1,3 +1,44 @@
+<div>
+  <input
+    id="filterMarkersSearch"
+    type="text"
+    placeholder="Filter"
+    value={this.state.query}
+    //onChange={(event) => this.filterMarkers(event.target.value).bind(this)}
+  />
+  {console.log(this.state.query)}
+
+  <div id="filterList">
+    <ol>
+    {this.state.markers && this.state.markers.map(marker =>
+      <li key={marker.id}>
+        <input
+          tabIndex="0"
+          id="filterMarker"
+          className="btn"
+          type="button"
+          value={marker.title}
+        />
+      </li>
+      )}
+
+    </ol>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <Search
   onDisplayFilteredMarkers={this.displayFilteredMarkers}
   filteredMarkers={filteredMarkers}
@@ -5,8 +46,33 @@
   markers={ markers }
   marker={ marker }
 />
+<Search
+  inforWindow={infoWindow}
+  locations={ locations }
+  markers={ markers }
+  marker={ marker }
+/>
 
-
+  //   //let filter =  event
+  //   let filteredMarkers = this.props.markers
+  //   if ( filter.length >= 0 ) {
+  //     {filter: filter.trim()}
+  //   }
+  //     // filteredMarkers.push(filter)
+  //     // filter => (this.setState({filteredMarkers: filter}))
+  //     // console.log(filteredMarkers)
+  //   this.props.markers.forEach(function(location) {
+  //     if (filteredMarkers.longname.indexOf(filter.toLowerCase()) >= 0) {
+  //       filteredMarkers.marker.setVisible(true)
+  //       filteredMarkers.push(filter)
+  //     } else {
+  //       filteredMarkers.marker.setVisible(false)
+  //     }
+  //   })
+  //   this.setState({
+  //     filteredMarkers: filteredMarkers,
+  //     filter: filter
+  //   })
 
   displayFilteredMarkers = (filteredMarker) => {
     const { marker } = this.props
@@ -665,6 +731,17 @@ document.getElementById('go-places').addEventListener('click', textSearchPlaces)
 
 
 
+fetch(`https://api.yelp.com/v3/businesses/lyons-classic-pinball-lyons-2`, {
+method: 'GET',
+//mode: "no-cors",
+headers: {
+    Authorization: `Bearer <Qf4UClfZBE6IT3Q49bHr_e9qUZqrkdBRBl_9HsynPTUAIDRT-GzMKEvRTfaRJTjxxoIJ8R7weAilZavjhCwbUC5RJncdvlbkNtR-MzbeemwxGvUde5VxmCIDx-6aW3Yx>`
+}
+}).then(function(response) {
+  debugger
+}).catch(function(err) {
+  console.log(err);
+})
 
 
 
