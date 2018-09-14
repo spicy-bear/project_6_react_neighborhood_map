@@ -25,8 +25,10 @@ html, body {
 	font-size: 11px;
 	text-align: center;
 	height: 30px;
+  max-width: 187px;
+  min-width: 187px;
 	line-height: 30px;
-	padding: 0 0px;
+	padding-left: 0;
 	text-decoration: none;
   direction: ltr;
   overflow: hidden;
@@ -34,18 +36,19 @@ html, body {
   user-select: none;
   background-clip: padding-box;
   box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px;
-  font-weight: 500;
-margin: 0 0 0 0;
+  font-weight: normal;
   }
 
 .btn:focus {
   outline: 0;
   background: #f1f1f1;
+  font-weight: 500;
 }
 
 .btn:active {
   outline: 0;
   background: #f1f1f1;
+  font-weight: 500;
 }
 
 .btn:hover {
@@ -53,6 +56,7 @@ margin: 0 0 0 0;
 	-webkit-box-shadow: 0px 1px 1px rgba(0,0,0,.1);
 	-moz-box-shadow: 0px 1px 1px rgba(0,0,0,.1);
 	box-shadow: 0px 1px 1px rgba(0,0,0,.1);
+  font-weight: 500;
 }
 
 
@@ -61,22 +65,43 @@ margin: 0 0 0 0;
   height: 200px;
 }
 
-ol, li, ul {
+li {
+  max-width: 187px;
+  min-width: 187px;
   text-decoration: none;
   list-style: none;
-  margin: 0 0 0 0;
-  padding: 0;
-
+  display:inline-block;
+  text-align: left;
+  float:left;
+  font-weight: normal;
 }
-#filterMarkersSearch {
-  position: absolute;
-  z-index: 1;
+
+ul, ol {
+  max-width: 187px;
+  min-width: 187px;
+  text-decoration: none;
+  list-style: none;
+  display:inline-block;
+  margin: 0 0 0 0;
+  padding:0;
+
+  /* position: absolute;
+  left:10px;
+  top:24px;
+  z-index: 1; */
+  font-weight: normal;
+  text-align: left;
+}
+
+#filterbar {
+  /* position: absolute;
+  z-index: 1; */
   height: 22px;
   display: inline-block;
   text-align: left;
-  min-width: 200px;
-  max-width: 200px;
-  margin: 60px 0px 0px 10px;
+  min-width: 187px;
+  max-width: 187px;
+  margin: 0px 0px 0px 0px;
 }
 
 #filterList{
@@ -90,13 +115,23 @@ ol, li, ul {
 
 #filterMarker {
   display: inline-block;
-  margin: 0px 0 0 10px;
+  margin: 0px 0 0 0px;
   padding-left: 2px;
   text-align: left;
-  min-width: 200px;
-  max-width: 200px;
+  min-width: inherit;
+  max-width: inherit;
 }
 
+#filtercontainer{
+  position: absolute;
+  left: 10px;
+  top: 60px;
+  max-width: 200px;
+  z-index: 1;
+  text-align: left;
+  float:left;
+  font-weight: normal;
+}
 
 
 

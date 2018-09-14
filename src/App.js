@@ -5,8 +5,9 @@ import './App.css'
 let map
 let locations
 let markers = []
-//let query
+let query = ''
 let marker
+let locationslist
 
 export default class App extends Component {
   constructor(props) {
@@ -14,8 +15,7 @@ export default class App extends Component {
       window.initMap = this.initMap.bind(this)
       this.state = {
       locations: locations,
-      map: {},
-      //infoWindow: ''
+      map: {}
     }
   }
 
@@ -31,6 +31,7 @@ export default class App extends Component {
       script.onerror = function() {
         window.alert("Google Maps can't load, try again")
       }
+      this.setState({locations: locations})
     }catch (error) {
       console.log(this.state)
       this.setState(() => {throw error})
@@ -91,7 +92,7 @@ export default class App extends Component {
   locations.forEach(location => {
     let title = location.title
     let position = location.location
-    console.log('Location', title, 'loaded')
+  //  console.log('Location', title, 'loaded')
 
     let marker = new window.google.maps.Marker({
       position: position,
@@ -118,8 +119,101 @@ export default class App extends Component {
         'locations': locations,
         'markers': markers,
         'map': map,
-        'marker': marker
+        'marker': marker,
+        'locationslist': locationslist
       })
+
+      let listItem = this.data
+      //console.log(this.state.locationslist)
+      locationslist = this.state.locations.map(function(listItem, index) {
+        return (
+        <li
+          type="button"
+          className="btn"
+          id="filterMarker"
+          tabIndex="0"
+          key={index}
+          value={listItem.title}
+          //locations={this.state.location}
+          //openInfoWindow={this.openInfoWindow}
+          //closeInfoWindow={this.closeInfoWindow}
+          //openInfoWindow={this.props.openInfoWindow.bind(this)}
+          //onKeyPress={this.props.openInfoWindow.bind(this, this.props.data.marker)}
+          //onClick={this.props.openInfoWindow.bind(this, this.props.data.marker)}
+        >
+          {listItem.title}
+        </li>
+        )
+      }, this)
+
+      //
+      // // Create a searchbox in order to execute a places search
+      // let searchBox = new window.google.maps.places.SearchBox(
+      //     document.getElementById('filterbar'))
+      // // Bias the searchbox to within the bounds of the map.
+      // searchBox.setBounds(map.getBounds())
+      //
+      // //document.getElementById('filterbar').addEventListener('click', searchBoxPlaces)
+      //
+      // searchBox.addListener('filterbar', function() {
+      //   searchBoxPlaces(this.query.value)
+      // })
+      // // This function fires when the user selects a searchbox picklist item.
+      //  // It will do a nearby search using the selected query string or place.
+      //  function searchBoxPlaces(searchBox) {
+      //    this.hideMarkers(markers)
+      //    let places = this.state.locations
+      //    // For each place, get the icon, name and location.
+      //    createMarkersForPlaces(places)
+      //    if (places.length === 0) {
+      //      window.alert('We did not find any places matching that search! Try a bigger area or a different city')
+      //    }
+      //  }
+      //  // This function creates markers for each place found in either places search.
+      //  function createMarkersForPlaces(places) {
+      //    let bounds = new window.google.maps.LatLngBounds()
+      //    for (let i = 0; i < places.length; i++) {
+      //      let place = places[i]
+      //      let icon = {
+      //        url: place.icon,
+      //        size: new window.google.maps.Size(35, 35),
+      //        origin: new window.google.maps.Point(0, 0),
+      //        anchor: new window.google.maps.Point(15, 34),
+      //        scaledSize: new window.google.maps.Size(25, 25)
+      //      }
+      //      // Create a marker for each place.
+      //      let marker = new window.google.maps.Marker({
+      //        map: map,
+      //        icon: icon,
+      //        title: place.name,
+      //        position: place.geometry.location,
+      //        id: place.place_id
+      //      })
+      //      // Create a single infowindow to be used with the place details information
+      //      // so that only one is open at once.
+      //      var placeInfoWindow = new window.google.maps.InfoWindow()
+      //      // If a marker is clicked, do a place details search on it in the next function.
+      //      marker.addListener('click', function() {
+      //        if (placeInfoWindow.marker === this) {
+      //          console.log("This infowindow already is on this marker!")
+      //        }
+      //      })
+      //      markers.push(marker)
+      //      if (place.geometry.viewport) {
+      //        // Only geocodes have viewport.
+      //        bounds.union(place.geometry.viewport)
+      //      } else {
+      //        bounds.extend(place.geometry.location)
+      //      }
+      //    }
+      //    map.fitBounds(bounds)
+      //  }
+
+
+
+
+
+
 
   })
   console.log('State updated to', this.state)
@@ -174,9 +268,9 @@ export default class App extends Component {
           //logs the name of the business when marker is selected
           //return data, then the response, then the venues array, limited to 1
           //then return the name
-          console.log(data.response.venues[0].name, data.response.venues[0].stats.checkinsCount)
+          console.log(data.response.venues[0])
 
-          infowindow.setContent('<div>' + data.response.venues[0].name + '<br />' + data.response.venues[0].location.formattedAddress[0] + '<br />' +  " Checkins " + data.response.venues[0].stats.checkinsCount + '<br />' +  '</div>')
+          infowindow.setContent('<div>' + data.response.venues[0].name + '<br />' + data.response.venues[0].location.formattedAddress[0] + '<br />' +  " Checkins " + data.response.venues[0].stats.checkinsCount + '</div>')
           })
         }).catch(function() {
           console.log('Foursquare API loading error')
@@ -204,16 +298,17 @@ export default class App extends Component {
       }
     }
 
+//https://stackoverflow.com/questions/31858156/creating-search-bar-to-filter-array-into-table
   filterMarkers = (query) => {
     //this.props.infowindow.close()
     //const { value } = event.target.value
     let filteredMarkers = []
-    const { locations, marker } = this.props
-    locations.forEach(location => {
-      if(location.title >= 0) {
-        this.showListings(marker)
+    console.log('filtering', query)
+    this.state.locations.forEach(location => {
+      if(location.title.toLowerCase().indexOf(query.toLowerCase()) >= 0) {
+        this.showListings(location)
       } else {
-        this.props.hideMarkers(marker)
+        this.hideMarkers(location)
       }
     })
     this.setState({
@@ -223,9 +318,19 @@ export default class App extends Component {
   }
 
   render() {
-    //const {  markers, locations, marker, infoWindow } = this.state
+
     return (
     <div>
+      <div id="filtercontainer">
+        <input
+          id="filterbar"
+          type="text"
+          placeholder="Filter"
+          value={this.query}
+          onChange={(event) => this.filterMarkers(event.target.value)}
+        />
+        <ol>{this.state.locationslist && locationslist}</ol>
+      </div>
       <div id="map" />
     </div>
     )
