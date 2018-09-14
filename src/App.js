@@ -20,7 +20,7 @@ export default class App extends Component {
   }
 
   componentDidMount () {
-    console.log('Component mounted and script loaded')
+    //console.log('Component mounted and script loaded')
     //after moving initMap function into the component, had to bind this
     try {
       const script = document.createElement('script')
@@ -56,7 +56,7 @@ export default class App extends Component {
     //   this.infowindow.close()
     // })
 
-    console.log('Map initialized')
+    //console.log('Map initialized')
 
     this.setState({
       'map': map,
@@ -123,9 +123,8 @@ export default class App extends Component {
         'locationslist': locationslist
       })
 
-      let listItem = this.data
-      //console.log(this.state.locationslist)
-      locationslist = this.state.locations.map(function(listItem, index) {
+      let item = this.data
+      locationslist = this.state.locations.map(function(item, index) {
         return (
         <li
           type="button"
@@ -133,18 +132,25 @@ export default class App extends Component {
           id="filterMarker"
           tabIndex="0"
           key={index}
-          value={listItem.title}
-          //locations={this.state.location}
+          value={item.title}
+          locations={this.state.location}
           //openInfoWindow={this.openInfoWindow}
           //closeInfoWindow={this.closeInfoWindow}
           //openInfoWindow={this.props.openInfoWindow.bind(this)}
           //onKeyPress={this.props.openInfoWindow.bind(this, this.props.data.marker)}
-          //onClick={this.props.openInfoWindow.bind(this, this.props.data.marker)}
+          onClick={this.hideOtherMarkers(this)}
         >
-          {listItem.title}
+          {item.title}
         </li>
         )
       }, this)
+
+      this.setState({
+          'locations': locations,
+          'markers': markers,
+          'marker': marker,
+          'locationslist': locationslist
+        })
 
       //
       // // Create a searchbox in order to execute a places search
@@ -298,10 +304,27 @@ export default class App extends Component {
       }
     }
 
+  hideOtherMarkers(marker) {
+    // for (let i = 0; i < markers.length; i++) {
+    //   console.log(marker.title)
+    this.state.markers.forEach(marker => {
+      if (this.marker != this.markers) {
+        markers.setMap(null)
+      } else {
+        marker.setMap(map)
+      }
+
+    console.log(this.marker)
+     })
+    //
+    //   markers.push(marker)
+
+  }
+
+
+
 //https://stackoverflow.com/questions/31858156/creating-search-bar-to-filter-array-into-table
   filterMarkers = (query) => {
-    //this.props.infowindow.close()
-    //const { value } = event.target.value
     let filteredMarkers = []
     console.log('filtering', query)
     this.state.locations.forEach(location => {
