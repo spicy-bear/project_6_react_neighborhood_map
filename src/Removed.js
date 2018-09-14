@@ -1,4 +1,109 @@
-<div>
+
+// Create a searchbox in order to execute a places search
+let searchBox = new window.google.maps.places.SearchBox(
+    document.getElementById('filterbar'))
+// Bias the searchbox to within the bounds of the map.
+searchBox.setBounds(map.getBounds())
+
+//document.getElementById('filterbar').addEventListener('click', searchBoxPlaces)
+
+searchBox.addListener('filterbar', function() {
+  searchBoxPlaces(this.query.value)
+})
+// This function fires when the user selects a searchbox picklist item.
+ // It will do a nearby search using the selected query string or place.
+ function searchBoxPlaces(searchBox) {
+   this.hideMarkers(markers)
+   let places = this.state.locations
+   // For each place, get the icon, name and location.
+   createMarkersForPlaces(places)
+   if (places.length === 0) {
+     window.alert('We did not find any places matching that search! Try a bigger area or a different city')
+   }
+ }
+ // This function creates markers for each place found in either places search.
+ function createMarkersForPlaces(places) {
+   let bounds = new window.google.maps.LatLngBounds()
+   for (let i = 0; i < places.length; i++) {
+     let place = places[i]
+     let icon = {
+       url: place.icon,
+       size: new window.google.maps.Size(35, 35),
+       origin: new window.google.maps.Point(0, 0),
+       anchor: new window.google.maps.Point(15, 34),
+       scaledSize: new window.google.maps.Size(25, 25)
+     }
+     // Create a marker for each place.
+     let marker = new window.google.maps.Marker({
+       map: map,
+       icon: icon,
+       title: place.name,
+       position: place.geometry.location,
+       id: place.place_id
+     })
+     // Create a single infowindow to be used with the place details information
+     // so that only one is open at once.
+     var placeInfoWindow = new window.google.maps.InfoWindow()
+     // If a marker is clicked, do a place details search on it in the next function.
+     marker.addListener('click', function() {
+       if (placeInfoWindow.marker === this) {
+         console.log("This infowindow already is on this marker!")
+       }
+     })
+     markers.push(marker)
+     if (place.geometry.viewport) {
+       // Only geocodes have viewport.
+       bounds.union(place.geometry.viewport)
+     } else {
+       bounds.extend(place.geometry.location)
+     }
+   }
+   map.fitBounds(bounds)
+ }
+
+
+
+    // for (let i = 0; i < locations.length; i++) {
+    //   // Get the position from the location array.
+    //   let position = locations[i].location
+    //   let title = locations[i].title
+    //   // Create a marker per location, and put into markers array.
+    //   let marker = new window.google.maps.Marker({
+    //     position: position,
+    //     title: title,
+    //     draggable: false,
+    //     animation: window.google.maps.Animation.DROP,
+    //     id: i,
+    //     icon: defaultIcon
+    //   })
+    //   markers.push(marker)
+    //   marker.addListener('mouseover', function() {
+    //     this.setIcon(highlightedIcon)
+    //   })
+    //   marker.addListener('mouseout', function() {
+    //     this.setIcon(defaultIcon)
+    //   })
+    //   this.setState({
+    //     'locations': locations,
+    //     'markers': markers,
+    //   })
+    // }<div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   <input
     id="filterMarkersSearch"
     type="text"
