@@ -6,6 +6,7 @@ let map
 let locations
 let markers = []
 //let query
+let marker
 
 export default class App extends Component {
   constructor(props) {
@@ -116,17 +117,9 @@ export default class App extends Component {
     this.setState({
         'locations': locations,
         'markers': markers,
-        'map': map
+        'map': map,
+        'marker': marker
       })
-    let clientID = 'REFU10YE0NIIQBQIMCOM21L5BYLT40CXHKS5AALXYPW3OPBQ'
-    let clientSecret = 'RZCUWYLNDIXBG5SUFE5XSNWVVNZOHPEGZELRZP1ELYGLV1HC'
-    fetch('https://api.foursquare.com/v2/venues/explore?client_id='+ clientID + '&client_secret='+ clientSecret + '&v=20180323&limit=1&ll='+ position.lat + ','+ position.lng)
-    .then(function() {
-      console.log('done')
-    })
-    .catch(function() {
-      console.log('error')
-    })
 
   })
   console.log('State updated to', this.state)
@@ -158,7 +151,6 @@ export default class App extends Component {
     // }
     this.showListings()
 
-
     // This function populates the infowindow when the marker is clicked. We'll only allow
     // one infowindow which will open at the marker that is clicked, and populate based
     // on that markers position.
@@ -172,40 +164,26 @@ export default class App extends Component {
         infowindow.addListener('closeclick',function(){
           infowindow.setMarker = null
         })
-      let streetViewService = new window.google.maps.StreetViewService();
-      let radius = 50;
-      // In case the status is OK, which means the pano was found, compute the
-      // position of the streetview image, then calculate the heading, then get a
-      // panorama from that and set the options
-      function getStreetView(data, status) {
-        if (status === window.google.maps.StreetViewStatus.OK) {
-          let nearStreetViewLocation = data.location.latLng
-          console.log('Street view returned status', status)
-          let heading = window.google.maps.geometry.spherical.computeHeading(
-            nearStreetViewLocation, marker.position)
-            infowindow.setContent('<div>' + marker.title + '</div><div id="panorama"></div>')
-            let panoramaOptions = {
-              position: nearStreetViewLocation,
-              pov: {
-                heading: heading,
-                pitch: 30
-              }
-            }
-          let panorama = new window.google.maps.StreetViewPanorama(
-            document.getElementById('panorama'), panoramaOptions)
-        } else {
-          infowindow.setContent('<div>' + marker.title + '</div>' +
-            '<div>No Street View Found</div>')
-        }
-        }
-        // Use streetview service to get the closest streetview image within
-        // 50 meters of the markers position
-        streetViewService.getPanoramaByLocation(marker.position, radius, getStreetView)
-        // Open the infowindow on the correct marker.
+        //https://developer.foursquare.com/docs/api/venues/search
+        let clientID = 'REFU10YE0NIIQBQIMCOM21L5BYLT40CXHKS5AALXYPW3OPBQ'
+        let clientSecret = 'RZCUWYLNDIXBG5SUFE5XSNWVVNZOHPEGZELRZP1ELYGLV1HC'
+        fetch('https://api.foursquare.com/v2/venues/search?client_id='+ clientID + '&client_secret='+ clientSecret + '&v=20180323&limit=1&ll='+ marker.getPosition().lat() + ','+ marker.getPosition().lng())
+        //.then(response => response.json(data))
+        .then(response => {
+          response.json().then(function(data) {
+          //logs the name of the business when marker is selected
+          //return data, then the response, then the venues array, limited to 1
+          //then return the name
+          console.log(data.response.venues[0].name, data.response.venues[0].stats.checkinsCount)
+
+          infowindow.setContent('<div>' + data.response.venues[0].name + '<br />' + data.response.venues[0].location.formattedAddress[0] + '<br />' +  " Checkins " + data.response.venues[0].stats.checkinsCount + '<br />' +  '</div>')
+          })
+        }).catch(function() {
+          console.log('Foursquare API loading error')
+        })
         infowindow.open(map, marker)
       }
     }
-
 
   }
 
@@ -243,7 +221,6 @@ export default class App extends Component {
         filteredMarkers: filteredMarkers
       })
   }
-
 
   render() {
     //const {  markers, locations, marker, infoWindow } = this.state
