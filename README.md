@@ -4,6 +4,8 @@ This App uses Google Maps API
 
 ## How to use the app
 
+Live pages is served [here ](http://confused-sand.surge.sh/)
+
 From cli run git clone + this repo
 
 cd into the downloaded folder
