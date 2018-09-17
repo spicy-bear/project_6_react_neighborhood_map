@@ -167,7 +167,6 @@ export default class App extends Component {
           //return data, then the response, then the venues array, limited to 1
           //then return the name
           console.log(data.response.venues[0])
-
           infowindow.setContent('<div>' + data.response.venues[0].name + '<br />' + data.response.venues[0].location.formattedAddress[0] + '<br />' +  " Checkins " + data.response.venues[0].stats.checkinsCount + '</div>')
           })
         }).catch(function() {
