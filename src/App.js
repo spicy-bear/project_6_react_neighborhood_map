@@ -93,7 +93,8 @@ export default class App extends Component {
       animation: window.google.maps.Animation.DROP,
       id: title+position,
       icon: defaultIcon,
-      map: map
+      map: map,
+      visible: true
     })
 
     markers.push(marker)
@@ -109,9 +110,6 @@ export default class App extends Component {
     })
     this.setState({
       'locations': locations,
-      'markers': markers,
-      'map': map,
-      'marker': marker,
       'locationslist': locationslist
     })
 
@@ -126,21 +124,25 @@ export default class App extends Component {
       key={index}
       value={item.title}
       locations={this.state.location}
-      onClick={() => this.hideMarkers(item.title, index)}
+      onClick={() => hideMarkers(item.title, index)}
     >
       {item.title}
     </li>
     )
   }, this)
 
-  this.hideMarkers = (item, index) =>{
+  })
+
+  function hideMarkers(item, index){
     for (let i = 0; i < markers.length; i++) {
-      markers[i].setMap(null)
-      markers[index].setMap(map)
+    markers[i].setVisible(false)
+    markers[index].setVisible(true)
+    if (markers[index].getAnimation() != null) {
+          markers[index].setAnimation(window.google.maps.Animation.BOUNCE)
+        } else {}
     }
   }
 
-  })
   //console.log('State updated to', this.state)
   this.showListings()
     // This function populates the infowindow when the marker is clicked. We'll only allow
@@ -170,7 +172,7 @@ export default class App extends Component {
           infowindow.setContent('<div>' + data.response.venues[0].name + '<br />' + data.response.venues[0].location.formattedAddress[0] + '<br />' +  " Checkins " + data.response.venues[0].stats.checkinsCount + '</div>')
           })
         }).catch(function() {
-          console.log('Foursquare API loading error')
+          window.alert('Foursquare API loading error, try again later or contact your child for tech support')
         })
         infowindow.open(map, marker)
       }
