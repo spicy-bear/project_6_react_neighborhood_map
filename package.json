@@ -1,8 +1,7 @@
 {
   "name": "project_6_react_neighborhood_map",
   "version": "0.1.0",
-  "private": true,
-  "homepage": "https://github.com/3noki/project_6_react_neighborhood_map",
+  "private": false,
   "dependencies": {
     "react": "^16.4.2",
     "react-scripts": "1.1.5"
