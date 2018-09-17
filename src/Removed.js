@@ -1,3 +1,13 @@
+
+  // This function will loop through the listings and hide them all.
+   hideMarkers(markers) {
+    for (let i = 0; i < markers.length; i++) {
+      markers[i].setMap(null)
+    }
+  }
+
+
+
 <input
   id="filterbar"
   type="text"

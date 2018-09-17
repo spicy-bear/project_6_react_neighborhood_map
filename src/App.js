@@ -126,14 +126,14 @@ export default class App extends Component {
       key={index}
       value={item.title}
       locations={this.state.location}
-      onClick={() => this.resetMarkers(item.title, index)}
+      onClick={() => this.hideMarkers(item.title, index)}
     >
       {item.title}
     </li>
     )
   }, this)
 
-  this.resetMarkers = (item, index) =>{
+  this.hideMarkers = (item, index) =>{
     for (let i = 0; i < markers.length; i++) {
       markers[i].setMap(null)
       markers[index].setMap(map)
@@ -188,13 +188,6 @@ export default class App extends Component {
       bounds.extend(markers[i].position)
     }
     map.fitBounds(bounds)
-  }
-
-  // This function will loop through the listings and hide them all.
-   hideMarkers(markers) {
-    for (let i = 0; i < markers.length; i++) {
-      markers[i].setMap(null)
-    }
   }
 
   render() {
