@@ -53,11 +53,8 @@ export default class App extends Component {
 
     let infoWindow = new window.google.maps.InfoWindow({})
 
-    //console.log('Map initialized')
-
     this.setState({
       'map': map,
-      //'locations': locations,
       'infoWindow': infoWindow
     })
 
@@ -89,7 +86,6 @@ export default class App extends Component {
   locations.forEach(location => {
     let title = location.title
     let position = location.location
-  //  console.log('Location', title, 'loaded')
 
     let marker = new window.google.maps.Marker({
       position: position,
@@ -113,68 +109,41 @@ export default class App extends Component {
       this.setIcon(defaultIcon)
     })
     this.setState({
-        'locations': locations,
-        'markers': markers,
-        'map': map,
-        'marker': marker,
-        'locationslist': locationslist
-      })
+      'locations': locations,
+      'markers': markers,
+      'map': map,
+      'marker': marker,
+      'locationslist': locationslist
+    })
 
-      let item = this.data
-      //console.log(this.state.locations)
-      locationslist = this.state.locations.map(function(item, index) {
-//console.log(item, index)
-      return (
-        <li
-          type="button"
-          className="btn"
-          id="filterMarker"
-          tabIndex="0"
-          key={index}
-          value={item.title}
-          locations={this.state.location}
-          onClick={() => this.resetMarkers(item.title, index)}
-        >
-          {item.title}
-        </li>
-        )
-      }, this)
+  let item = this.data
+  locationslist = this.state.locations.map(function(item, index) {
+  return (
+    <li
+      type="button"
+      className="btn"
+      id="filterMarker"
+      tabIndex="0"
+      key={index}
+      value={item.title}
+      locations={this.state.location}
+      onClick={() => this.resetMarkers(item.title, index)}
+    >
+      {item.title}
+    </li>
+    )
+  }, this)
 
-      // this.setState({
-      //     'locations': locations,
-      //     'markers': markers,
-      //     //'marker': marker,
-      //     'locationslist': locationslist
-      //   })
-    this.resetMarkers = (item, index) =>{
-      // markers.forEach(marker => {
-      // marker.setMap(null)
-      // console.log(marker)
-      // })
-    //console.log(item, index, marker)
-  // if(marker === index) {
-    //console.log(markers)
-  // } else {
+  this.resetMarkers = (item, index) =>{
     for (let i = 0; i < markers.length; i++) {
       markers[i].setMap(null)
       markers[index].setMap(map)
     }
-
-  //}
-
-    }
-// setTimeout(
-//         document.getElementById('filterMarker').innerHTML=('key='this.index).addEventListener('click', function(){
-//           populateInfoWindow(this.children, largeInfowindow)
-//           console.log('button clicked', location.title)
-//         })
-// , 1000)
+  }
 
   })
   //console.log('State updated to', this.state)
-
-    this.showListings()
-
+  this.showListings()
     // This function populates the infowindow when the marker is clicked. We'll only allow
     // one infowindow which will open at the marker that is clicked, and populate based
     // on that markers position.
@@ -211,67 +180,26 @@ export default class App extends Component {
 
   }
 
-    // This function will loop through the markers array and display them all.
-     showListings() {
-      let bounds = new window.google.maps.LatLngBounds()
-      // Extend the boundaries of the map for each marker and display the marker
-      for (let i = 0; i < markers.length; i++) {
-        markers[i].setMap(map)
-        bounds.extend(markers[i].position)
-      }
-      map.fitBounds(bounds)
+  // This function will loop through the markers array and display them all.
+   showListings() {
+    let bounds = new window.google.maps.LatLngBounds()
+    // Extend the boundaries of the map for each marker and display the marker
+    for (let i = 0; i < markers.length; i++) {
+      markers[i].setMap(map)
+      bounds.extend(markers[i].position)
     }
-    // This function will loop through the listings and hide them all.
-     hideMarkers(markers) {
-      for (let i = 0; i < markers.length; i++) {
-        markers[i].setMap(null)
-      }
-    }
-
-
-
-  hideOtherMarkers(marker) {
-    // for (let i = 0; i < markers.length; i++) {
-    //
-    let locations = []
-    this.state.markers.forEach(marker => {
-      if (this.marker != this.markers) {
-        markers.setMap(null)
-      } else {
-        marker.setMap(map)
-      }
-
-    console.log(this.marker)
-     })
-    }
-
-//https://stackoverflow.com/questions/31858156/creating-search-bar-to-filter-array-into-table
-  filterMarkers = (data) => {
-    //let locations = []
-    console.log(marker)
-    // this.setState({
-    //     locations: []
-    //   })
-      //for (let i = 0; i < this.state.locations.length; i++) {
-        //markers.setMap(null)
-    //}
-    //console.log('filtering', query)
-    // this.state.locations.forEach(location => {
-    //     location.setMap(null)
-    //   // if(location.title.toLowerCase().indexOf(query.toLowerCase()) >= 0) {
-    //   //   this.showListings(location)
-    //   // } else {
-    //   //   this.hideMarkers(location)
-    //   // }
-    // })
-    // this.setState({
-    //     //query: query.trim(),
-    //     locations: []
-    //   })
+    map.fitBounds(bounds)
   }
 
-  render() {
+  // This function will loop through the listings and hide them all.
+   hideMarkers(markers) {
+    for (let i = 0; i < markers.length; i++) {
+      markers[i].setMap(null)
+    }
+  }
 
+
+  render() {
     return (
     <div>
       <div id="filtercontainer">

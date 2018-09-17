@@ -10,6 +10,64 @@
 //openInfoWindow={this.props.openInfoWindow.bind(this)}
 //onKeyPress={this.populateInfoWindow(this, largeInfowindow)}
 
+//https://stackoverflow.com/questions/31858156/creating-search-bar-to-filter-array-into-table
+  filterMarkers = (data) => {
+    //let locations = []
+    console.log(marker)
+    // this.setState({
+    //     locations: []
+    //   })
+      //for (let i = 0; i < this.state.locations.length; i++) {
+        //markers.setMap(null)
+    //}
+    //console.log('filtering', query)
+    // this.state.locations.forEach(location => {
+    //     location.setMap(null)
+    //   // if(location.title.toLowerCase().indexOf(query.toLowerCase()) >= 0) {
+    //   //   this.showListings(location)
+    //   // } else {
+    //   //   this.hideMarkers(location)
+    //   // }
+    // })
+    // this.setState({
+    //     //query: query.trim(),
+    //     locations: []
+    //   })
+  }
+
+  setTimeout(
+          document.getElementById('filterMarker').innerHTML=('key='this.index).addEventListener('click', function(){
+            populateInfoWindow(this.children, largeInfowindow)
+            console.log('button clicked', location.title)
+          })
+  , 1000)
+
+
+  this.setState({
+      'locations': locations,
+      'markers': markers,
+      //'marker': marker,
+      'locationslist': locationslist
+    })
+
+    hideOtherMarkers(marker) {
+      // for (let i = 0; i < markers.length; i++) {
+      //
+      let locations = []
+      this.state.markers.forEach(marker => {
+        if (this.marker != this.markers) {
+          markers.setMap(null)
+        } else {
+          marker.setMap(map)
+        }
+
+      console.log(this.marker)
+       })
+      }
+
+
+
+
 
 // Create a searchbox in order to execute a places search
 let searchBox = new window.google.maps.places.SearchBox(
