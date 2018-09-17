@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-//import Search from './components/Search.js'
 import './App.css'
 
 let map
@@ -197,7 +196,6 @@ export default class App extends Component {
       markers[i].setMap(null)
     }
   }
-
 
   render() {
     return (

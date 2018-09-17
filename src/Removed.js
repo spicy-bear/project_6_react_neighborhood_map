@@ -1353,7 +1353,81 @@ function getPlacesDetails(marker, infowindow) {
 
 
 
+import React, { Component } from 'react'
+import '../App.css'
 
+let query
+
+export default class Search extends Component {
+  constructor(props) {
+    super(props)
+      this.state = {
+        query: ''
+      }
+  }
+
+  filterMarkers = (query) => {
+    //this.props.infowindow.close()
+    //const { value } = event.target.value
+    let filteredMarkers = []
+    const { locations, marker } = this.props
+    locations.forEach(location => {
+      if(location.title >= 0) {
+        this.showListings(marker)
+      } else {
+        this.props.hideMarkers(marker)
+      }
+    })
+    // this.props.locations.forEach((marker) => {
+    // console.log(marker)
+    // if(query.length >= 0) {
+    // this.hideMarkers()
+    //   this.props.markers.push(marker)
+    // } else {
+    //   this.showListings()
+    // }
+    this.setState({
+        query: query.trim(),
+        filteredMarkers: filteredMarkers
+      })
+  }
+
+
+
+  render() {
+    const { markers, locations, marker } = this.props
+
+    return (
+    <div>
+      <input
+        id="filterMarkersSearch"
+        type="text"
+        placeholder="Filter"
+        value={this.state.query}
+        onChange={(event) => this.filterMarkers(event.target.value).bind(this)}
+      />
+
+      <div id="filterList">
+        <ol>
+        {this.props.markers && this.props.markers.map(marker =>
+          <li key={marker.id}>
+            <input
+              tabIndex="0"
+              id="filterMarker"
+              className="btn"
+              type="button"
+              value={marker.title}
+              //infowindow.open(map, markers[i])
+            />
+          </li>
+          )}
+
+        </ol>
+      </div>
+    </div>
+    )
+  }
+}
 
 
 
@@ -1428,3 +1502,60 @@ function getPlacesDetails(marker, infowindow) {
     height: 20px;
     width: 20px;
 }
+
+
+
+
+
+
+
+
+
+  // This function populates the infowindow when the marker is clicked. We'll only allow
+  // one infowindow which will open at the marker that is clicked, and populate based
+  // on that markers position.
+  function populateInfoWindow(marker, infowindow) {
+    // Check to make sure the infowindow is not already opened on this marker.
+    if (infowindow.marker !== marker) {
+      infowindow.setContent('')
+      infowindow.marker = marker
+      infowindow.open(map, marker)
+      // Make sure the marker property is cleared if the infowindow is closed.
+      infowindow.addListener('closeclick',function(){
+        infowindow.setMarker = null
+      })
+    let streetViewService = new window.google.maps.StreetViewService()
+    let radius = 50
+    // In case the status is OK, which means the pano was found, compute the
+    // position of the streetview image, then calculate the heading, then get a
+    // panorama from that and set the options
+    function getStreetView(data, status) {
+      if (status === window.google.maps.StreetViewStatus.OK) {
+        let nearStreetViewLocation = data.location.latLng
+        let heading = window.google.maps.geometry.spherical.computeHeading(
+          nearStreetViewLocation, marker.position)
+          infowindow.setContent('<div>' + marker.title + '</div><div id="panorama"></div>')
+          let panoramaOptions = {
+            position: nearStreetViewLocation,
+            pov: {
+              heading: heading,
+              pitch: 30
+            }
+          }
+        let panorama = new window.google.maps.StreetViewPanorama(
+          document.getElementById('panorama'), panoramaOptions)
+      } else if (status === window.google.maps.StreetViewStatus.UNKNOWN_ERROR) {
+        window.alert('Streetview Unknown Error, try another search')
+        }
+      else {
+        infowindow.setContent('<div>' + marker.title + '</div>' +
+          '<div>No Street View Found</div>')
+      }
+      }
+      // Use streetview service to get the closest streetview image within
+      // 50 meters of the markers position
+      streetViewService.getPanoramaByLocation(marker.position, radius, getStreetView)
+      // Open the infowindow on the correct marker.
+      infowindow.open(map, marker)
+    }
+  }
