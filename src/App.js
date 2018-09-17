@@ -15,7 +15,8 @@ export default class App extends Component {
       window.initMap = this.initMap.bind(this)
       this.state = {
       locations: locations,
-      map: {}
+      map: {},
+      markers: markers
     }
   }
 
@@ -120,8 +121,10 @@ export default class App extends Component {
       })
 
       let item = this.data
+      //console.log(this.state.locations)
       locationslist = this.state.locations.map(function(item, index) {
-        return (
+//console.log(item, index)
+      return (
         <li
           type="button"
           className="btn"
@@ -130,25 +133,45 @@ export default class App extends Component {
           key={index}
           value={item.title}
           locations={this.state.location}
-          //openInfoWindow={this.openInfoWindow}
-          //closeInfoWindow={this.closeInfoWindow}
-          //openInfoWindow={this.props.openInfoWindow.bind(this)}
-          onKeyPress={this.populateInfoWindow(this, largeInfowindow)}
-          //onClick={this.hideOtherMarkers(this)}
+          onClick={() => this.resetMarkers(item.title, index)}
         >
           {item.title}
         </li>
         )
       }, this)
 
-      this.setState({
-          'locations': locations,
-          'markers': markers,
-          'marker': marker,
-          'locationslist': locationslist
-        })
+      // this.setState({
+      //     'locations': locations,
+      //     'markers': markers,
+      //     //'marker': marker,
+      //     'locationslist': locationslist
+      //   })
+    this.resetMarkers = (item, index) =>{
+      // markers.forEach(marker => {
+      // marker.setMap(null)
+      // console.log(marker)
+      // })
+    //console.log(item, index, marker)
+  // if(marker === index) {
+    //console.log(markers)
+  // } else {
+    for (let i = 0; i < markers.length; i++) {
+      markers[i].setMap(null)
+      markers[index].setMap(map)
+    }
+
+  //}
+
+    }
+// setTimeout(
+//         document.getElementById('filterMarker').innerHTML=('key='this.index).addEventListener('click', function(){
+//           populateInfoWindow(this.children, largeInfowindow)
+//           console.log('button clicked', location.title)
+//         })
+// , 1000)
+
   })
-  console.log('State updated to', this.state)
+  //console.log('State updated to', this.state)
 
     this.showListings()
 
@@ -205,9 +228,12 @@ export default class App extends Component {
       }
     }
 
+
+
   hideOtherMarkers(marker) {
     // for (let i = 0; i < markers.length; i++) {
-    //   console.log(marker.title)
+    //
+    let locations = []
     this.state.markers.forEach(marker => {
       if (this.marker != this.markers) {
         markers.setMap(null)
@@ -220,20 +246,28 @@ export default class App extends Component {
     }
 
 //https://stackoverflow.com/questions/31858156/creating-search-bar-to-filter-array-into-table
-  filterMarkers = (query) => {
-    let filteredMarkers = []
-    console.log('filtering', query)
-    this.state.locations.forEach(location => {
-      if(location.title.toLowerCase().indexOf(query.toLowerCase()) >= 0) {
-        this.showListings(location)
-      } else {
-        this.hideMarkers(location)
-      }
-    })
-    this.setState({
-        query: query.trim(),
-        filteredMarkers: filteredMarkers
-      })
+  filterMarkers = (data) => {
+    //let locations = []
+    console.log(marker)
+    // this.setState({
+    //     locations: []
+    //   })
+      //for (let i = 0; i < this.state.locations.length; i++) {
+        //markers.setMap(null)
+    //}
+    //console.log('filtering', query)
+    // this.state.locations.forEach(location => {
+    //     location.setMap(null)
+    //   // if(location.title.toLowerCase().indexOf(query.toLowerCase()) >= 0) {
+    //   //   this.showListings(location)
+    //   // } else {
+    //   //   this.hideMarkers(location)
+    //   // }
+    // })
+    // this.setState({
+    //     //query: query.trim(),
+    //     locations: []
+    //   })
   }
 
   render() {
@@ -241,14 +275,7 @@ export default class App extends Component {
     return (
     <div>
       <div id="filtercontainer">
-        <input
-          id="filterbar"
-          type="text"
-          placeholder="Filter"
-          value={this.query}
-          onChange={(event) => this.filterMarkers(event.target.value)}
-        />
-        <ol>{this.state.locationslist && locationslist}</ol>
+        <ul>{this.state.locationslist}</ul>
       </div>
       <div id="map" />
     </div>

@@ -1,3 +1,15 @@
+<input
+  id="filterbar"
+  type="text"
+  placeholder="Filter"
+  value={this.query}
+  onChange={(event) => this.filterMarkers(event.target.value)}
+/>
+//openInfoWindow={this.openInfoWindow}
+//closeInfoWindow={this.closeInfoWindow}
+//openInfoWindow={this.props.openInfoWindow.bind(this)}
+//onKeyPress={this.populateInfoWindow(this, largeInfowindow)}
+
 
 // Create a searchbox in order to execute a places search
 let searchBox = new window.google.maps.places.SearchBox(
