@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import './App.css'
 
 let map
-let locations
+//let locations
 let markers = []
 let query = ''
 let marker
@@ -13,7 +13,7 @@ export default class App extends Component {
       super(props)
       window.initMap = this.initMap.bind(this)
       this.state = {
-      locations: locations,
+      //locations: locations,
       map: {},
       markers: markers
     }
@@ -31,7 +31,7 @@ export default class App extends Component {
       script.onerror = function() {
         window.alert("Google Maps can't load, try again")
       }
-      this.setState({locations: locations})
+      //this.setState({locations: locations})
     }catch (error) {
       console.log(this.state)
       this.setState(() => {throw error})
@@ -126,7 +126,7 @@ export default class App extends Component {
       key={index}
       value={item.title}
       locations={this.state.location}
-      onClick={() => hideMarkers(item.title, index)}
+      onClick={() => this.hideMarkers(item.title, index)}
     >
       {item.title}
     </li>
@@ -134,17 +134,6 @@ export default class App extends Component {
   }, this)
 
   })
-
-  function hideMarkers(item, index){
-    for (let i = 0; i < markers.length; i++) {
-    markers[i].setVisible(false)
-    markers[index].setVisible(true)
-    if (markers[index].getAnimation() != null) {
-          markers[index].setAnimation(markers[index].getAnimation())
-        } else {}
-    }
-
-  }
 
   //console.log('State updated to', this.state)
   this.showListings()
@@ -194,17 +183,26 @@ export default class App extends Component {
     map.fitBounds(bounds)
   }
 
-  filterMarkers = (event) =>{
-  //filterMarkers(query){
-    //const { markers, locations } = this.state
-    let updatedList = locations
-    console.log(this.state, this.props)
-    updatedList = updatedList.filter(function(query){
-    return (event.toLowerCase().search(event.target.value.toLowerCase()) >= 0)
-    })
-    this.setState({query: updatedList})
-    //console.log(this.state)
+  hideMarkers(item, index){
+console.log(this.state.markers)
+    for (let i = 0; i < markers.length; i++) {
+    markers[i].setVisible(false)
+    markers[index].setVisible(true)
+    if (markers[index].getAnimation() != null) {
+          markers[index].setAnimation(markers[index].getAnimation())
+        } else {}
+    }
   }
+
+  // filterMarkers(value) {
+  //   let updatedList = this.state.locations
+  //   console.log(this.state.locations, value)
+  //   updatedList = updatedList.filter(function(value){
+  //   (value.toLowerCase().search(value.toLowerCase()) >= 0)
+  //   })
+  //   console.log(updatedList)
+  //   //this.setState({query: updatedList})
+  // }
 
   render() {
     return (
@@ -214,10 +212,10 @@ export default class App extends Component {
         id="filterbar"
         type="text"
         placeholder="Filter"
-        value={this.state.query}
-        //onChange={(event) => this.filterMarkers(event.target.value)}
-        onChange={this.filterMarkers(query)}
-      />
+        //value={this.state.query}
+        onChange={(event) => this.hideMarkers(this.state.marker, index)}
+      >
+      </input>
         <ul>{this.state.locationslist}</ul>
       </div>
       <div id="map" />

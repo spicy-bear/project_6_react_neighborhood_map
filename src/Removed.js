@@ -1,3 +1,22 @@
+<input
+  id="filterbar"
+  type="text"
+  placeholder="Filter"
+  value={this.state.query}
+  //onChange={(event) => this.filterMarkers(event.target.value)}
+  onChange={this.filterMarkers(query)}
+/>
+
+
+<input
+  id="filterbar"
+  type="text"
+  placeholder="Filter"
+  value={this.state.query}
+  //onChange={(event) => this.filterMarkers(event.target.value)}
+  onChange={() => this.filterMarkers(query)}
+/>
+
 
   // This function will loop through the listings and hide them all.
    hideMarkers(markers) {
