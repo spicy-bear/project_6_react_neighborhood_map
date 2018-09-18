@@ -6,7 +6,34 @@
     }
   }
 
+  // const { locations } = this.state
+  // console.log(locations[0].title, markers, value)
+  // for (let i = 0; i < locations.length; i++) {
+  // if (locations[0].title.toLowerCase().indexOf(this.value) >= 0) {
+  //   //markers[i].setVisible(true);
+  //   //markers.push(marker);
+  // } else {
+  //   //markers[i].setVisible(false);
+  // }
+  //
+  // this.setState({
+  //   'locations': locations,
+  //   'query': value
+  // })
 
+
+  // function hideMarkers(item, index){
+  //   for (let i = 0; i < markers.length; i++) {
+  //   markers[i].setVisible(false)
+  //   markers[index].setVisible(true)
+  //   if (markers[index].getAnimation() != null) {
+  //         markers[index].setAnimation(markers[index].getAnimation())
+  //       } else {}
+  //   }
+  // }
+
+  }
+}
 
 <input
   id="filterbar"

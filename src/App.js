@@ -90,7 +90,7 @@ export default class App extends Component {
       position: position,
       title: title,
       draggable: false,
-      animation: window.google.maps.Animation.DROP,
+      animation: window.google.maps.Animation.BOUNCE,
       id: title+position,
       icon: defaultIcon,
       map: map,
@@ -110,7 +110,9 @@ export default class App extends Component {
     })
     this.setState({
       'locations': locations,
-      'locationslist': locationslist
+      'locationslist': locationslist,
+      'markers': markers,
+      'marker': marker
     })
 
   let item = this.data
@@ -138,9 +140,10 @@ export default class App extends Component {
     markers[i].setVisible(false)
     markers[index].setVisible(true)
     if (markers[index].getAnimation() != null) {
-          markers[index].setAnimation(window.google.maps.Animation.BOUNCE)
+          markers[index].setAnimation(markers[index].getAnimation())
         } else {}
     }
+
   }
 
   //console.log('State updated to', this.state)
@@ -191,10 +194,30 @@ export default class App extends Component {
     map.fitBounds(bounds)
   }
 
+  filterMarkers = (event) =>{
+  //filterMarkers(query){
+    //const { markers, locations } = this.state
+    let updatedList = locations
+    console.log(this.state, this.props)
+    updatedList = updatedList.filter(function(query){
+    return (event.toLowerCase().search(event.target.value.toLowerCase()) >= 0)
+    })
+    this.setState({query: updatedList})
+    //console.log(this.state)
+  }
+
   render() {
     return (
     <div>
       <div id="filtercontainer">
+      <input
+        id="filterbar"
+        type="text"
+        placeholder="Filter"
+        value={this.state.query}
+        //onChange={(event) => this.filterMarkers(event.target.value)}
+        onChange={this.filterMarkers(query)}
+      />
         <ul>{this.state.locationslist}</ul>
       </div>
       <div id="map" />
