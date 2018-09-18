@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import './App.css'
 
 let map
-//let locations
+let locations
 let markers = []
 let query = ''
 let marker
@@ -13,7 +13,7 @@ export default class App extends Component {
       super(props)
       window.initMap = this.initMap.bind(this)
       this.state = {
-      //locations: locations,
+      locations: locations,
       map: {},
       markers: markers
     }
@@ -31,7 +31,7 @@ export default class App extends Component {
       script.onerror = function() {
         window.alert("Google Maps can't load, try again")
       }
-      //this.setState({locations: locations})
+      this.setState({locations: locations})
     }catch (error) {
       console.log(this.state)
       this.setState(() => {throw error})
@@ -90,7 +90,7 @@ export default class App extends Component {
       position: position,
       title: title,
       draggable: false,
-      animation: window.google.maps.Animation.BOUNCE,
+      animation: window.google.maps.Animation.DROP,
       id: title+position,
       icon: defaultIcon,
       map: map,
@@ -110,43 +110,38 @@ export default class App extends Component {
     })
     this.setState({
       'locations': locations,
-      'locationslist': locationslist,
-      'markers': markers,
-      'marker': marker
+      'locationslist': locationslist
     })
 
-    let item = this.data
-    //this.setState({locations: null })
-
-  function filterMarkers(value) {
-    // let updatedList = this.state.locations
-    console.log(this.state.locations, value)
-    // updatedList = updatedList.filter(function(value){
-    // (value.toLowerCase().search(value.toLowerCase()) >= 0)
-    // })
-    // console.log(updatedList)
-    //this.setState({query: updatedList})
-  }
-
-    locationslist = this.state.locations.map(function(item, index) {
-    return (
-      <li
-        type="button"
-        className="btn"
-        id="filterMarker"
-        tabIndex="0"
-        key={index}
-        value={item.title}
-        locations={this.state.location}
-        onChange={() => this.hideMarkers(item.title, index)}
-      >
-        {item.title}
-      </li>
-      )
-    }, this)
-
+  let item = this.data
+  locationslist = this.state.locations.map(function(item, index) {
+  return (
+    <li
+      type="button"
+      className="btn"
+      id="filterMarker"
+      tabIndex="0"
+      key={index}
+      value={item.title}
+      locations={this.state.location}
+      onClick={() => hideMarkers(item.title, index)}
+    >
+      {item.title}
+    </li>
+    )
+  }, this)
 
   })
+
+  function hideMarkers(item, index){
+    for (let i = 0; i < markers.length; i++) {
+    markers[i].setVisible(false)
+    markers[index].setVisible(true)
+    if (markers[index].getAnimation() != null) {
+          markers[index].setAnimation(window.google.maps.Animation.BOUNCE)
+        } else {}
+    }
+  }
 
   //console.log('State updated to', this.state)
   this.showListings()
@@ -196,17 +191,6 @@ export default class App extends Component {
     map.fitBounds(bounds)
   }
 
-  hideMarkers(item, index){
-  console.log(this.state.markers)
-    for (let i = 0; i < markers.length; i++) {
-    markers[i].setVisible(false)
-    markers[index].setVisible(true)
-    if (markers[index].getAnimation() != null) {
-          markers[index].setAnimation(markers[index].getAnimation())
-        } else {}
-    }
-  }
-
   render() {
     return (
     <div>
@@ -216,9 +200,9 @@ export default class App extends Component {
         type="text"
         placeholder="Filter"
         value={this.state.query}
-        onChange={filterMarkers()}
+        //onChange={this.filterPlaces(query)}
       />
-      <ul>{this.state.locationslist}</ul>
+        <ul>{this.state.locationslist}</ul>
       </div>
       <div id="map" />
     </div>

@@ -1,3 +1,38 @@
+<div id="filtercontainer">
+<input
+  id="filterbar"
+  type="text"
+  placeholder="Filter"
+  value={this.state.query}
+  //onChange={this.filterPlaces(query)}
+/>
+
+  <select>{this.state.locationslist}</select>
+
+</div>
+
+{console.log(this.state.locations)}
+let locationlist =
+  locations && this.state.locations.map(function(location) {
+    for(let i = 0; i < locations.length; i++){
+      <li
+        type="button"
+        className="btn"
+        id="filterMarker"
+        tabIndex="0"
+        key={i}
+        value={locations[i].title}
+        locations={locations[i].location}
+        onClick={() => this.hideMarkers(locations[i].title, i)}
+        >
+        {locations[i].title}
+      </li>
+      }
+  }, this)
+
+
+
+
 <input
   id="filterbar"
   type="text"
