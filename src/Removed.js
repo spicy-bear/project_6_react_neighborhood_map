@@ -6,6 +6,66 @@
   //onChange={(event) => this.filterMarkers(event.target.value)}
   onChange={this.filterMarkers(query)}
 />
+<ul>{this.state.locationslist}</ul>
+
+<div id="filtercontainer">
+<input
+  id="filterbar"
+  type="text"
+  placeholder="Filter"
+  //locations={this.state.locationslist}
+  //value={this.state.query}
+  onChange={(event) => this.filterMarkers(this.state.marker)}
+>
+</input>
+<ul> {console.log(this.state.locations)}
+{this.state.locations && this.state.locations.map(function(item, index, location) {
+  <li
+    type="button"
+    className="btn"
+    id="filterMarker"
+    tabIndex="0"
+    key={index}
+    value={item.title}
+    location={location}
+    //onClick={() => this.hideMarkers(item.title, index)}
+  >{item.title}
+  </li>
+})}
+</ul>
+</div>
+
+  filterMarkers(value) {
+    let updatedList = this.state.locations
+    console.log(this.state.locations, value)
+    updatedList = updatedList.filter(function(value){
+    (value.toLowerCase().search(value.toLowerCase()) >= 0)
+    })
+    console.log(updatedList)
+    //this.setState({query: updatedList})
+  }
+
+
+
+  let item = this.data
+  locationslist = this.state.locations.map(function(item, index) {
+  return (
+    <li
+      type="button"
+      className="btn"
+      id="filterMarker"
+      tabIndex="0"
+      key={index}
+      value={item.title}
+      locations={this.state.location}
+      onClick={() => this.hideMarkers(item.title, index)}
+    >
+      {item.title}
+    </li>
+    )
+  }, this)
+
+
 
 
 <input

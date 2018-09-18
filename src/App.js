@@ -115,23 +115,36 @@ export default class App extends Component {
       'marker': marker
     })
 
-  let item = this.data
-  locationslist = this.state.locations.map(function(item, index) {
-  return (
-    <li
-      type="button"
-      className="btn"
-      id="filterMarker"
-      tabIndex="0"
-      key={index}
-      value={item.title}
-      locations={this.state.location}
-      onClick={() => this.hideMarkers(item.title, index)}
-    >
-      {item.title}
-    </li>
-    )
-  }, this)
+    let item = this.data
+    //this.setState({locations: null })
+
+  function filterMarkers(value) {
+    // let updatedList = this.state.locations
+    console.log(this.state.locations, value)
+    // updatedList = updatedList.filter(function(value){
+    // (value.toLowerCase().search(value.toLowerCase()) >= 0)
+    // })
+    // console.log(updatedList)
+    //this.setState({query: updatedList})
+  }
+
+    locationslist = this.state.locations.map(function(item, index) {
+    return (
+      <li
+        type="button"
+        className="btn"
+        id="filterMarker"
+        tabIndex="0"
+        key={index}
+        value={item.title}
+        locations={this.state.location}
+        onChange={() => this.hideMarkers(item.title, index)}
+      >
+        {item.title}
+      </li>
+      )
+    }, this)
+
 
   })
 
@@ -184,7 +197,7 @@ export default class App extends Component {
   }
 
   hideMarkers(item, index){
-console.log(this.state.markers)
+  console.log(this.state.markers)
     for (let i = 0; i < markers.length; i++) {
     markers[i].setVisible(false)
     markers[index].setVisible(true)
@@ -194,16 +207,6 @@ console.log(this.state.markers)
     }
   }
 
-  // filterMarkers(value) {
-  //   let updatedList = this.state.locations
-  //   console.log(this.state.locations, value)
-  //   updatedList = updatedList.filter(function(value){
-  //   (value.toLowerCase().search(value.toLowerCase()) >= 0)
-  //   })
-  //   console.log(updatedList)
-  //   //this.setState({query: updatedList})
-  // }
-
   render() {
     return (
     <div>
@@ -212,11 +215,10 @@ console.log(this.state.markers)
         id="filterbar"
         type="text"
         placeholder="Filter"
-        //value={this.state.query}
-        onChange={(event) => this.hideMarkers(this.state.marker, index)}
-      >
-      </input>
-        <ul>{this.state.locationslist}</ul>
+        value={this.state.query}
+        onChange={filterMarkers()}
+      />
+      <ul>{this.state.locationslist}</ul>
       </div>
       <div id="map" />
     </div>
