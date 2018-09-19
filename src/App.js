@@ -183,18 +183,20 @@ export default class App extends Component {
   handleQueryChange = e => {
     this.setState({ query: e.target.value })
   }
-  hideMarkers(item){
+  hideMarkers(index){
     for (let i = 0; i < markers.length; i++) {
     markers[i].setVisible(false)
-    markers[i].setVisible(true)
-    if (markers[i].getAnimation() != null) {
-          markers[i].setAnimation(window.google.maps.Animation.BOUNCE)
-        } else {}
+    markers[index].setVisible(true)
+    if (markers[index].getAnimation() != null) {
+        markers[index].setAnimation(window.google.maps.Animation.BOUNCE)
+
+      } else {}
     }
+//this.setState({ locations: markers[index] })
   }
 
   render() {
-    //console.log(this.state.locations)
+    console.log(this.state.query)
     return (
     <div>
       <div id="filtercontainer">
@@ -210,14 +212,16 @@ export default class App extends Component {
           .map(location => {
           return (
               <li
-                key={location.title}
+                key={location.id}
                 type="button"
                 className="btn"
                 id="filterMarker"
                 tabIndex="0"
                 value={location.title}
                 locations={location.location}
-                onChange={this.hideMarkers(this.state.query)}
+                //onClick={this.hideMarkers(location.id)}
+                onClick={() => this.hideMarkers(location.id)}
+                onChange={this.hideMarkers(location.id)}
                 >
                 {location.title}
               </li>
