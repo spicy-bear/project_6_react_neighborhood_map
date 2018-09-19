@@ -24,6 +24,13 @@ export default class App extends Component {
       const script = document.createElement('script')
       script.defer = true
       script.async = true
+      script.mode = 'no-cors'
+      script.header= {
+        'accept': 'application/json, application/json',
+        'accept-encoding': 'gzip, deflate, gzip, deflate',
+        'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36',
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
       script.src = "https://maps.googleapis.com/maps/api/js?libraries=places,drawing,geometry&key=AIzaSyAWiSZ2beXFrSFWzZVRgF122wCkVf4P67Y&v=3.32&callback=initMap"
       document.head.appendChild(script)
       script.onerror = function() {
@@ -94,7 +101,7 @@ export default class App extends Component {
       title: title,
       draggable: false,
       animation: window.google.maps.Animation.DROP,
-      id: title+position,
+      id: title,
       icon: defaultIcon,
       map: map,
       visible: true
@@ -111,53 +118,12 @@ export default class App extends Component {
     marker.addListener('mouseout', function() {
       this.setIcon(defaultIcon)
     })
-
-let locationslist = this.state.locations
-  .filter(o => {o.contains(this.state.query)})
-  .map(o => <li key={o}
-      type="button"
-      className="btn"
-      id="filterMarker"
-      tabIndex="0">{o}</li>)
-
-    this.setState({
-      'locations': locations,
-      'locationslist': locationslist
-    })
-  //
-  // let item = this.data
-  // locationslist = this.state.locations.map(function(item, index) {
-  // return (
-  //   <li
-  //     type="button"
-  //     className="btn"
-  //     id="filterMarker"
-  //     tabIndex="0"
-  //     key={index}
-  //     value={item.title}
-  //     locations={this.state.location}
-  //     onClick={() => hideMarkers(item.title, index)}
-  //   >
-  //     {item.title}
-  //   </li>
-  //   )
-  // }, this)
-  //
-  // window.google.maps.event.addListener(map, 'click', function() {
-  //   this.infowindow.close()
-  // })
-
+    // this.setState({
+    //   'locations': locations,
+    //   'locationslist': locationslist
+    // })
   })
 
-  function hideMarkers(item, index){
-    for (let i = 0; i < markers.length; i++) {
-    markers[i].setVisible(false)
-    markers[index].setVisible(true)
-    if (markers[index].getAnimation() != null) {
-          markers[index].setAnimation(window.google.maps.Animation.BOUNCE)
-        } else {}
-    }
-  }
 
   //console.log('State updated to', this.state)
   this.showListings()
@@ -193,6 +159,10 @@ let locationslist = this.state.locations
         infowindow.open(map, marker)
       }
     }
+    this.setState({
+      'locations': locations,
+      'locationslist': locationslist
+    })
 
   }
 
@@ -204,18 +174,27 @@ let locationslist = this.state.locations
       markers[i].setMap(map)
       bounds.extend(markers[i].position)
       this.setState({
-        'locations': locations,
+        'locations': locations
       })
     }
     map.fitBounds(bounds)
   }
 
   handleQueryChange = e => {
-    this.setState({ query: e.target.value }).bind(this)
+    this.setState({ query: e.target.value })
+  }
+  hideMarkers(item){
+    for (let i = 0; i < markers.length; i++) {
+    markers[i].setVisible(false)
+    markers[i].setVisible(true)
+    if (markers[i].getAnimation() != null) {
+          markers[i].setAnimation(window.google.maps.Animation.BOUNCE)
+        } else {}
+    }
   }
 
   render() {
-    console.log(this.state.locations)
+    //console.log(this.state.locations)
     return (
     <div>
       <div id="filtercontainer">
@@ -225,7 +204,26 @@ let locationslist = this.state.locations
         placeholder="Filter"
         onChange={this.handleQueryChange} value={this.state.query} />
         <ul>
-        {this.state.locationslist}
+        {
+          this.state.locations
+          .filter(location => location.title.toLowerCase().includes(this.state.query))
+          .map(location => {
+          return (
+              <li
+                key={location.title}
+                type="button"
+                className="btn"
+                id="filterMarker"
+                tabIndex="0"
+                value={location.title}
+                locations={location.location}
+                onChange={this.hideMarkers(this.state.query)}
+                >
+                {location.title}
+              </li>
+            )
+            })
+        }
         </ul>
       </div>
       <div id="map" />
