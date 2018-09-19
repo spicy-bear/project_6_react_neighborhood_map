@@ -18,8 +18,6 @@ export default class App extends Component {
   }
 
   componentDidMount () {
-    //console.log('Component mounted and script loaded')
-    //after moving initMap function into the component, had to bind this
     try {
       const script = document.createElement('script')
       script.defer = true
@@ -44,6 +42,7 @@ export default class App extends Component {
       this.setState(() => {throw error})
       window.alert(error, 'Google maps not loaded, try again')
       }
+
   }
 
   gm_authFailure() {
@@ -108,7 +107,6 @@ export default class App extends Component {
     })
 
     markers.push(marker)
-    //Create an onclick event to open an infowindow at each marker.
     marker.addListener('click', function() {
       populateInfoWindow(this, largeInfowindow)
     })
@@ -118,19 +116,19 @@ export default class App extends Component {
     marker.addListener('mouseout', function() {
       this.setIcon(defaultIcon)
     })
+
     // this.setState({
     //   'locations': locations,
     //   'locationslist': locationslist
     // })
   })
 
-
-  //console.log('State updated to', this.state)
   this.showListings()
     // This function populates the infowindow when the marker is clicked. We'll only allow
     // one infowindow which will open at the marker that is clicked, and populate based
     // on that markers position.
      function populateInfoWindow(marker, infowindow) {
+      infowindow.close(map, marker)
       // Check to make sure the infowindow is not already opened on this marker.
       if (infowindow.marker !== marker) {
         infowindow.setContent('')
@@ -189,14 +187,12 @@ export default class App extends Component {
     markers[index].setVisible(true)
     if (markers[index].getAnimation() != null) {
         markers[index].setAnimation(window.google.maps.Animation.BOUNCE)
-
       } else {}
     }
 //this.setState({ locations: markers[index] })
   }
 
   render() {
-    console.log(this.state.query)
     return (
     <div>
       <div id="filtercontainer">
@@ -204,7 +200,8 @@ export default class App extends Component {
         id="filterbar"
         type="text"
         placeholder="Filter"
-        onChange={this.handleQueryChange} value={this.state.query} />
+        onChange={this.handleQueryChange} value={this.state.query}
+        />
         <ul>
         {
           this.state.locations
@@ -217,9 +214,6 @@ export default class App extends Component {
                 className="btn"
                 id="filterMarker"
                 tabIndex="0"
-                value={location.title}
-                locations={location.location}
-                //onClick={this.hideMarkers(location.id)}
                 onClick={() => this.hideMarkers(location.id)}
                 onChange={this.hideMarkers(location.id)}
                 >

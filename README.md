@@ -1,6 +1,6 @@
 # Readme
 
-This App uses Google Maps API
+This App uses Google Maps API and the Foursquare API
 
 ## How to use the app
 
