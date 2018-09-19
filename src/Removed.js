@@ -1,3 +1,55 @@
+const OPTIONS = [
+    'apple',
+    'orange',
+    'grape',
+];
+
+class Search extends Component {
+  state = {
+      query: '',
+  };
+
+  handleQueryChange = e => {
+    this.setState({ query: e.target.value });
+  };
+
+  render() {
+    return (
+      <div>
+        <input onChange={this.handleQueryChange} value={this.state.query} />
+        <ul>
+          {OPTIONS
+            .filter(o => o.contains(this.state.query))
+            .map(o => <li key={o}>{o}</li>)
+          }
+        </ul>
+      </div>
+    );
+  }
+}
+
+
+
+
+
+
+<input
+  id="filterbar"
+  type="text"
+  placeholder="Filter"
+  value={this.state.query}
+  //onChange={this.filterPlaces(query)}
+/>
+  <ul>{this.state.locationslist}</ul>
+
+
+
+
+
+
+
+
+
 <div id="filtercontainer">
 <input
   id="filterbar"

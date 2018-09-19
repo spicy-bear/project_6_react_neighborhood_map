@@ -2,21 +2,19 @@ import React, { Component } from 'react'
 import './App.css'
 
 let map
-let locations
+let locations = require('./utilities/locations.json')
 let markers = []
 let query = ''
 let marker
 let locationslist
+let gm_authFailure
 
 export default class App extends Component {
-  constructor(props) {
-      super(props)
-      window.initMap = this.initMap.bind(this)
-      this.state = {
-      locations: locations,
-      map: {},
-      markers: markers
-    }
+  state = {
+    locations: locations,
+    map: {},
+    markers: markers,
+    query: query
   }
 
   componentDidMount () {
@@ -32,11 +30,17 @@ export default class App extends Component {
         window.alert("Google Maps can't load, try again")
       }
       this.setState({locations: locations})
+      window.initMap = this.initMap.bind(this)
+
     }catch (error) {
       console.log(this.state)
       this.setState(() => {throw error})
       window.alert(error, 'Google maps not loaded, try again')
       }
+  }
+
+  gm_authFailure() {
+      alert("Google Map authorization error. Please try refreshing the page.");
   }
 
   initMap() {
@@ -81,7 +85,6 @@ export default class App extends Component {
       scale: .06
   }
 
-  let locations = require('./utilities/locations.json')
   locations.forEach(location => {
     let title = location.title
     let position = location.location
@@ -108,28 +111,41 @@ export default class App extends Component {
     marker.addListener('mouseout', function() {
       this.setIcon(defaultIcon)
     })
+
+let locationslist = this.state.locations
+  .filter(o => {o.contains(this.state.query)})
+  .map(o => <li key={o}
+      type="button"
+      className="btn"
+      id="filterMarker"
+      tabIndex="0">{o}</li>)
+
     this.setState({
       'locations': locations,
       'locationslist': locationslist
     })
-
-  let item = this.data
-  locationslist = this.state.locations.map(function(item, index) {
-  return (
-    <li
-      type="button"
-      className="btn"
-      id="filterMarker"
-      tabIndex="0"
-      key={index}
-      value={item.title}
-      locations={this.state.location}
-      onClick={() => hideMarkers(item.title, index)}
-    >
-      {item.title}
-    </li>
-    )
-  }, this)
+  //
+  // let item = this.data
+  // locationslist = this.state.locations.map(function(item, index) {
+  // return (
+  //   <li
+  //     type="button"
+  //     className="btn"
+  //     id="filterMarker"
+  //     tabIndex="0"
+  //     key={index}
+  //     value={item.title}
+  //     locations={this.state.location}
+  //     onClick={() => hideMarkers(item.title, index)}
+  //   >
+  //     {item.title}
+  //   </li>
+  //   )
+  // }, this)
+  //
+  // window.google.maps.event.addListener(map, 'click', function() {
+  //   this.infowindow.close()
+  // })
 
   })
 
@@ -168,7 +184,7 @@ export default class App extends Component {
           //logs the name of the business when marker is selected
           //return data, then the response, then the venues array, limited to 1
           //then return the name
-          console.log(data.response.venues[0])
+          //console.log(data.response.venues[0])
           infowindow.setContent('<div>' + data.response.venues[0].name + '<br />' + data.response.venues[0].location.formattedAddress[0] + '<br />' +  " Checkins " + data.response.venues[0].stats.checkinsCount + '</div>')
           })
         }).catch(function() {
@@ -187,11 +203,19 @@ export default class App extends Component {
     for (let i = 0; i < markers.length; i++) {
       markers[i].setMap(map)
       bounds.extend(markers[i].position)
+      this.setState({
+        'locations': locations,
+      })
     }
     map.fitBounds(bounds)
   }
 
+  handleQueryChange = e => {
+    this.setState({ query: e.target.value }).bind(this)
+  }
+
   render() {
+    console.log(this.state.locations)
     return (
     <div>
       <div id="filtercontainer">
@@ -199,10 +223,10 @@ export default class App extends Component {
         id="filterbar"
         type="text"
         placeholder="Filter"
-        value={this.state.query}
-        //onChange={this.filterPlaces(query)}
-      />
-        <ul>{this.state.locationslist}</ul>
+        onChange={this.handleQueryChange} value={this.state.query} />
+        <ul>
+        {this.state.locationslist}
+        </ul>
       </div>
       <div id="map" />
     </div>
